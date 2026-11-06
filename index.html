@@ -44,20 +44,6 @@
   --nav-h: 78px;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --papel: #0b150f; --cartao: #13211a; --tinta: #edf1e8; --suave: #b9c4b5; --linha: #2c3e33; --linha-forte: #5d6e61;
-    --salvia-clara: #1c2e23; --oliva-texto: #c4d69a; --acao: #b9cf8c; --acao-texto: #0b150f;
-    --ok: #93dbaa; --ok-fundo: #153522; --atr: #f4cd7e; --atr-fundo: #3a2c10; --inad: #ffaaa2; --inad-fundo: #3d1a18;
-    --foco: #8db8ff; --sombra: none; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --papel: #0b150f; --cartao: #13211a; --tinta: #edf1e8; --suave: #b9c4b5; --linha: #2c3e33; --linha-forte: #5d6e61;
-  --salvia-clara: #1c2e23; --oliva-texto: #c4d69a; --acao: #b9cf8c; --acao-texto: #0b150f;
-  --ok: #93dbaa; --ok-fundo: #153522; --atr: #f4cd7e; --atr-fundo: #3a2c10; --inad: #ffaaa2; --inad-fundo: #3d1a18;
-  --foco: #8db8ff; --sombra: none; color-scheme: dark;
-}
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: calc(var(--nav-h) + 24px); scroll-padding-top: 90px; }
@@ -113,8 +99,6 @@ main.conteudo {
 }
 .navbaixo button svg.i { width: 26px; height: 26px; }
 .navbaixo button[aria-current="page"] { color: var(--mata); background: var(--salvia-clara); }
-:root[data-theme="dark"] .navbaixo button[aria-current="page"] { color: var(--oliva-texto); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .navbaixo button[aria-current="page"] { color: var(--oliva-texto); } }
 .navbaixo button.destaque span.bola {
   width: 54px; height: 54px; border-radius: 50%; background: var(--mata); color: #fff; display: grid; place-items: center;
   margin-top: -26px; box-shadow: 0 6px 16px rgba(0, 57, 18, .35); border: 4px solid var(--cartao);
@@ -220,6 +204,7 @@ main.conteudo {
 .conta.ok { background: var(--ok-fundo); border-color: transparent; color: var(--ok); }
 .conta.atr { background: var(--atr-fundo); border-color: transparent; color: var(--atr); }
 .conta.inad { background: var(--inad-fundo); border-color: transparent; color: var(--inad); }
+.contas.linhas { grid-template-columns: minmax(0, 1fr); gap: 8px; } .contas.linhas .conta { grid-template-columns: 64px minmax(0, 1fr); align-items: center; padding: 10px 16px; } .contas.linhas .conta .n { font-size: 1.9rem; } .contas.linhas .conta .t { font-size: 1.05rem; }
 @media (max-width: 560px) { .contas { grid-template-columns: minmax(0, 1fr); gap: 8px; } .conta { grid-template-columns: 64px minmax(0, 1fr); align-items: center; padding: 10px 16px; } .conta .n { font-size: 1.9rem; } .conta .t { font-size: 1.05rem; } }
 
 /* Chácaras */
@@ -276,7 +261,9 @@ details.grupo .lista { padding: 0 0 8px 34px; }
 .vazio .ave { width: 64px; height: 82px; opacity: .5; filter: grayscale(.2); }
 
 /* Formulários */
-form { display: grid; gap: 18px; }
+form { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
+form > * { min-width: 0; }
+.app > *, .coluna { min-width: 0; }
 .campo { display: grid; gap: 7px; min-width: 0; }
 .campo > label, .campo > .lbl, fieldset > legend { font-weight: 700; font-size: 1.05rem; }
 .campo .dica { font-size: .92rem; color: var(--suave); }
@@ -310,8 +297,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--mata); outline: 
 .opcao input:checked + span > .marca::after { content: ""; width: 10px; height: 6px; border-left: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-45deg) translate(1px, -1px); }
 .opcao input:focus-visible + span { outline: 4px solid var(--foco); outline-offset: 2px; }
 .opcao input:disabled + span { opacity: .45; text-decoration: line-through; }
-:root[data-theme="dark"] .opcao input:checked + span > .marca { background: var(--acao); border-color: var(--acao); color: var(--acao-texto); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .opcao input:checked + span > .marca { background: var(--acao); border-color: var(--acao); color: var(--acao-texto); } :root:not([data-theme="light"]) .opcao input:checked + span { border-color: var(--acao); } }
 
 /* Abas segmentadas */
 .segmento { display: flex; gap: 6px; padding: 6px; background: var(--salvia-clara); border-radius: 18px; flex-wrap: wrap; }
@@ -324,8 +309,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--mata); outline: 
 .passo-cab { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; }
 .passo-cab .mesnav { margin-left: auto; }
 .passo .nro { width: 44px; height: 44px; border-radius: 50%; background: var(--mata); color: #fff; display: grid; place-items: center; font-family: var(--f-titulo); font-weight: 800; font-size: 1.3rem; }
-:root[data-theme="dark"] .passo .nro { background: var(--acao); color: var(--acao-texto); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .passo .nro { background: var(--acao); color: var(--acao-texto); } }
 .passo .corpo { display: grid; gap: 14px; min-width: 0; }
 @media (max-width: 480px) { .passo-cab .mesnav { margin-left: 0; width: 100%; justify-content: space-between; } .passo-cab .mesnav strong { min-width: 0; } }
 
@@ -347,8 +330,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--mata); outline: 
 .dia.hoje .d { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
 .dia[aria-pressed="true"] { border-color: var(--mata); background: var(--mata); color: #fff; }
 .dia[aria-pressed="true"] .pts i { background: #fff; }
-:root[data-theme="dark"] .dia[aria-pressed="true"] { border-color: var(--acao); background: var(--acao); color: var(--acao-texto); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .dia[aria-pressed="true"] { border-color: var(--acao); background: var(--acao); color: var(--acao-texto); } }
 .legenda { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: .92rem; color: var(--suave); }
 .legenda span { display: inline-flex; align-items: center; gap: 8px; }
 .legenda i { width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--linha); background: var(--cartao); }
@@ -397,7 +378,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--mata); outline: 
 }
 
 /* Tabelas */
-.tabela { overflow-x: auto; border: 1px solid var(--linha); border-radius: 16px; background: var(--cartao); }
+.tabela { overflow-x: auto; border: 1px solid var(--linha); border-radius: 16px; background: var(--cartao); position: relative; }
 table { width: 100%; border-collapse: collapse; font-size: 1rem; }
 th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--linha); vertical-align: middle; }
 th { font-size: .85rem; letter-spacing: .05em; text-transform: uppercase; color: var(--suave); background: var(--papel); white-space: nowrap; }
@@ -428,6 +409,88 @@ tfoot td { font-weight: 700; background: var(--papel); }
 .lista.adim .ch { font-family: var(--f-titulo); font-weight: 800; font-size: 1.45rem; line-height: 1.1; overflow-wrap: anywhere; font-variant-numeric: lining-nums; }
 .lista.adim .fim { grid-column: 2; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 @media (min-width: 760px) { .lista.adim > li { grid-template-columns: 90px minmax(0, 1fr) auto; } .lista.adim .fim { grid-column: 3; justify-content: flex-end; } }
+input[type=file] { width: 100%; min-height: 64px; padding: 14px; border: 2px dashed var(--linha-forte); border-radius: 14px; background: var(--papel); font-size: 1rem; cursor: pointer; }
+input[type=file]::file-selector-button { font: inherit; font-weight: 700; border: 0; border-radius: 12px; padding: 10px 16px; margin-right: 12px; background: var(--mata); color: #fff; cursor: pointer; }
+.arq-prev { display: flex; gap: 12px; align-items: center; margin-top: 4px; }
+.arq-prev img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; border: 1px solid var(--linha); }
+.comp-view img { width: 100%; border-radius: 14px; border: 1px solid var(--linha); background: #fff; }
+.comp-view iframe { width: 100%; height: 70vh; border: 1px solid var(--linha); border-radius: 14px; background: #fff; }
+.btn-comp { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: .88rem; color: var(--mata); background: var(--salvia-clara); border-radius: 999px; padding: 6px 12px; margin-top: 6px; }
+.btn-comp:focus-visible { outline: 4px solid var(--foco); outline-offset: 2px; }
+.filtros { display: flex; flex-wrap: wrap; gap: 8px; }
+.filtros button { min-height: 48px; padding: 8px 16px; border-radius: 999px; border: 2px solid var(--linha-forte); background: var(--cartao); font-weight: 700; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+.filtros button[aria-pressed="true"] { background: var(--mata); color: #fff; border-color: var(--mata); }
+.tab-assoc td { vertical-align: top; padding: 11px 10px; }
+.tab-assoc th { padding: 11px 10px; }
+.tab-assoc td.nome { min-width: 170px; }
+.tab-assoc td.ab { min-width: 150px; }
+.tab-assoc .seta { color: var(--suave); width: 28px; padding-left: 0; }
+.tab-assoc td.ch { font-family: var(--f-titulo); font-weight: 800; font-size: 1.25rem; white-space: nowrap; }
+.tab-assoc tr.linha-clicavel { cursor: pointer; }
+.tab-assoc tr.linha-clicavel:hover td { background: var(--papel); }
+.lista-assoc { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.lista-assoc li { background: var(--cartao); border: 1px solid var(--linha); border-radius: 18px; padding: 16px; display: grid; gap: 10px; }
+.lista-assoc li.inad { border-left: 6px solid var(--inad); }
+.lista-assoc li.atr { border-left: 6px solid var(--atr); }
+.lista-assoc li.ok { border-left: 6px solid var(--ok); }
+.lista-assoc .topo-l { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.lista-assoc .topo-l .ch { font-family: var(--f-titulo); font-weight: 800; font-size: 1.5rem; line-height: 1; }
+.lista-assoc dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; font-size: 1rem; }
+.lista-assoc dt { color: var(--suave); }
+.lista-assoc dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.so-pc { display: none; }
+@media (min-width: 1024px) { .so-pc { display: block; } .so-cel { display: none; } }
+.sinc-wrap { max-width: 1180px; margin: 0 auto; padding: 12px max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); }
+@media (min-width: 1024px) { .sinc-wrap { padding: 18px 44px 0; } }
+.sinc { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--suave); flex-wrap: wrap; }
+.sinc svg.i { color: var(--ok); }
+.sinc.erro svg.i { color: var(--inad); }
+.sinc-btn { all: unset; cursor: pointer; font-weight: 700; color: var(--mata); text-decoration: underline; text-underline-offset: 3px; padding: 6px 4px; }
+.sinc-btn:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; border-radius: 6px; }
+.sinc-btn[disabled] { opacity: .5; cursor: default; }
+.sinc.off { background: var(--atr-fundo); color: var(--tinta); border: 2px solid var(--atr); border-radius: 16px; padding: 14px 16px; align-items: flex-start; font-size: 1rem; }
+.sinc.off > svg.i { color: var(--atr); width: 26px; height: 26px; margin-top: 2px; }
+.sinc.off > div { flex: 1 1 260px; }
+.gira { width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--linha); border-top-color: var(--mata); animation: gira 0.8s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+.grade-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.grade-nav strong { font-size: 1.05rem; }
+.legenda-grade { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: .9rem; color: var(--suave); margin: 4px 0; }
+.legenda-grade span { display: inline-flex; align-items: center; gap: 6px; }
+.grade-wrap { max-height: none; }
+.grade-adim { border-collapse: separate; border-spacing: 0; font-size: .95rem; }
+.grade-adim th, .grade-adim td { padding: 6px 4px; border-bottom: 1px solid var(--linha); text-align: center; white-space: nowrap; }
+.grade-adim thead th { position: sticky; top: 0; background: var(--papel); z-index: 2; }
+.grade-adim .fixa { position: sticky; left: 0; background: var(--cartao); z-index: 1; text-align: left; padding: 6px 10px; font-family: var(--f-titulo); font-weight: 800; font-size: 1.05rem; letter-spacing: 0; text-transform: none; color: var(--tinta); box-shadow: 1px 0 0 var(--linha); }
+.grade-adim thead .fixa { z-index: 3; background: var(--papel); font-family: var(--f-texto); font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--suave); }
+.grade-adim .nome-col { text-align: left; max-width: 220px; overflow: hidden; text-overflow: ellipsis; padding: 6px 10px; }
+.grade-adim .mes-col span { display: block; font-size: .8rem; }
+.grade-adim .mes-col small { display: block; font-size: .7rem; color: var(--suave); text-transform: none; letter-spacing: 0; font-weight: 400; }
+.grade-adim td.cel { padding: 4px 3px; }
+.q { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; vertical-align: middle; }
+.q svg.i { width: 18px; height: 18px; stroke-width: 3; color: #fff; }
+.q.pg { background: #1f8a4c; }
+.q.a { background: #f2c230; }
+.q.r { background: #c8332c; }
+.q.av { background: var(--cartao); border: 2px dashed var(--linha-forte); }
+.q.nc { background: var(--salvia-clara); }
+.legenda-grade .q { width: 20px; height: 20px; border-radius: 6px; }
+.ch-btn { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font: inherit; color: var(--mata); border-radius: 8px; padding: 4px 6px; margin: -4px -6px; }
+.ch-btn svg.i { width: 15px; height: 15px; opacity: .55; }
+.ch-btn:hover { background: var(--salvia-clara); }
+.ch-btn:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+.reg-caixa { border: 2px solid var(--linha); border-radius: 18px; padding: 16px; display: grid; gap: 14px; background: var(--cartao); }
+.reg-hist { white-space: pre-line; font-size: .92rem; color: var(--suave); background: var(--papel); border-radius: 12px; padding: 10px 12px; }
+.pendente-selo { background: var(--atr-fundo); color: var(--atr); }
+@media print { .grade-adim .q { -webkit-print-color-adjust: exact; print-color-adjust: exact; } .sinc-wrap { display: none; } }
+.grade-adim .ter-info { display: block; font-size: .78rem; color: var(--suave); white-space: normal; max-width: 220px; }
+.terrenos-caixa { border: 2px solid var(--linha); border-radius: 18px; padding: 14px 16px 16px; display: grid; gap: 12px; background: var(--papel); }
+.terrenos-caixa > legend { padding: 0 6px; }
+#terrenos { display: grid; gap: 10px; }
+.terreno-linha { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; background: var(--cartao); border: 1px solid var(--linha); border-radius: 14px; padding: 12px; }
+.terreno-linha .terreno-cobra, .terreno-linha .terreno-motivo, .terreno-linha .terreno-remover { grid-column: 1 / -1; }
+.terreno-linha .terreno-remover { justify-self: start; }
+@media (min-width: 760px) { .terreno-linha { grid-template-columns: 110px minmax(0, 1fr) 256px; } .terreno-linha .terreno-cobra { grid-column: auto; } .terreno-linha .terreno-cobra > span { white-space: nowrap; } .terreno-linha .terreno-remover { justify-self: end; } }
 .rodape-pag { text-align: center; color: var(--suave); font-size: .88rem; padding: 18px 0 0; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
@@ -465,6 +528,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
       </div>
       <div class="acoes" id="topoAcoes"></div>
     </header>
+    <div id="sincBar" class="sinc-wrap" aria-live="polite"></div>
     <main class="conteudo" id="conteudo" tabindex="-1"></main>
   </div>
 </div>
@@ -508,7 +572,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
   var S = {
     modo: 'publico', vista: 'inicio', token: null, usuario: null, painel: null,
     mesPub: null, mesMov: null, mesRel: null, mesCal: null, diaSel: null, periodoSel: null,
-    info: null, publico: null, cal: [], filtroCh: '', lancTipo: 'mensalidade', relTipo: 'mes', relCamp: '', resAba: 'ativas'
+    info: null, publico: null, cal: [], pubCache: {}, calCache: {}, filtroAs: 'todos', filtroCh: '', lancTipo: 'mensalidade', relTipo: 'mes', relCamp: '', resAba: 'ativas'
   };
   function guarda(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { } }
   function le(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -538,6 +602,305 @@ tfoot td { font-weight: 700; background: var(--papel); }
     var d = soDig(cel); if (d.length <= 11) d = '55' + d;
     return 'https:' + '/' + '/wa.me/' + d + '?text=' + encodeURIComponent(texto || '');
   }
+
+  // =====================================================================
+  // DADOS NO APARELHO: o aplicativo baixa tudo numa sincronização e monta
+  // as telas aqui mesmo, sem esperar o servidor. Funciona sem internet.
+  // =====================================================================
+  var DB = { pub: lerJSON('siriema_pub2'), dir: null, fila: lerJSON('siriema_fila') || [], sinc: lerTexto('siriema_sinc'), sincronizando: null, online: navigator.onLine !== false };
+  function lerJSON(k) { try { var t = localStorage.getItem(k); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
+  function lerTexto(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function gravarJSON(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } }
+
+  function D() { return (S.token && DB.dir) ? DB.dir : DB.pub; }
+  function temDados() { return !!D(); }
+
+  // ---------- Lançamentos (lista compacta -> objetos) ----------
+  var _cacheLanc = { fonte: null, fila: -1, lista: [] };
+  function lancamentos() {
+    var d = D(); if (!d) return [];
+    if (_cacheLanc.fonte === d && _cacheLanc.fila === DB.fila.length) return _cacheLanc.lista;
+    var camps = {}; (d.campanhas || []).forEach(function (c) { camps[c.id] = c.nome; });
+    var lista = d.lancamentos.map(function (x) {
+      return { id: x[0], data: x[1], tipo: x[2], categoria: x[3], campanha: x[4], campanhaNome: camps[x[4]] || '', chacara: x[5], mes: x[6],
+        descricao: x[7] || (x[3] === 'Mensalidade' ? '' : (camps[x[4]] ? 'Contribuição para ' + camps[x[4]] : x[3])), valor: Number(x[8]) || 0,
+        comprovante: !!x[9], status: x[10] || 'Ativo', pagoPor: x[11] || '', motivo: x[12] || '', criadoPor: x[13] || '' };
+    });
+    if (S.token) DB.fila.forEach(function (f) { filaParaLanc(f).forEach(function (l) { l.campanhaNome = camps[l.campanha] || ''; lista.push(l); }); });
+    _cacheLanc = { fonte: d, fila: DB.fila.length, lista: lista };
+    return lista;
+  }
+  function ativos() { return lancamentos().filter(function (l) { return l.status !== 'Cancelado'; }); }
+  function filaParaLanc(f) {
+    var x = f.dados, st = f.erro ? 'Erro' : 'Pendente';
+    if (f.fn === 'lancarMensalidade') return (x.meses || []).map(function (m, i) {
+      return { id: f.uid + '_' + i, data: x.data, tipo: 'Entrada', categoria: 'Mensalidade', campanha: '', chacara: x.chacara, mes: m, descricao: 'Mensalidade ' + mesCurto(m),
+        valor: Number(x.valorPorMes) || 0, comprovante: !!x.arquivo, status: st, pagoPor: x.pagoPor || '', motivo: f.erro || '', criadoPor: 'este aparelho', pendente: f.uid };
+    });
+    if (f.fn === 'lancar') return [{ id: f.uid, data: x.data, tipo: x.tipo, categoria: x.campanha ? 'Campanha' : x.categoria, campanha: x.campanha || '', chacara: x.chacara || '', mes: '',
+      descricao: x.descricao, valor: Number(x.valor) || 0, comprovante: !!x.arquivo, status: st, pagoPor: x.pagoPor || '', motivo: f.erro || '', criadoPor: 'este aparelho', pendente: f.uid }];
+    return [];
+  }
+
+  // ---------- Datas e meses ----------
+  function hojeLocal() { return isoLocal(new Date()); }
+  function mesAtualL() { return hojeLocal().slice(0, 7); }
+  function ultimoDevido() { var d = D(), venc = d ? d.config.diaVencimento : 10; return Number(hojeLocal().slice(8, 10)) > venc ? mesAtualL() : somaMes(mesAtualL(), -1); }
+  function seqMeses(a, b) { var out = [], m = a, g = 0; while (m <= b && g++ < 400) { out.push(m); m = somaMes(m, 1); } return out; }
+  function difMeses(a, b) { var p = a.split('-'), q = b.split('-'); return (Number(q[0]) - Number(p[0])) * 12 + Number(q[1]) - Number(p[1]); }
+  function situacaoPor(n) { var c = D().config; return n >= c.mesesInadimplente ? 'inadimplente' : n >= c.mesesAtraso ? 'atrasado' : 'em dia'; }
+  function ordemCh(a, b) { var x = parseInt(a.chacara, 10), y = parseInt(b.chacara, 10); if (x !== y) return (isNaN(x) ? 1e9 : x) - (isNaN(y) ? 1e9 : y); return String(a.chacara).localeCompare(String(b.chacara)); }
+
+  // ---------- Adimplência ----------
+  function pagosPorChacara() {
+    var mapa = {};
+    ativos().forEach(function (l) { if (l.categoria === 'Mensalidade' && l.mes) (mapa[l.chacara] = mapa[l.chacara] || {})[l.mes] = l; });
+    return mapa;
+  }
+  function adimplencia(incluirInativos) {
+    var d = D(), pagos = pagosPorChacara(), fim = ultimoDevido();
+    return (d.associados || []).filter(function (a) { return incluirInativos || a.ativo !== false; }).map(function (a) {
+      var p = pagos[a.chacara] || {}, desde = a.desde || mesAtualL();
+      var abertos = seqMeses(desde, fim).filter(function (m) { return !p[m]; });
+      return { id: a.id, chacara: a.chacara, nome: a.nome || '', celular: a.celular || '', mensalidade: a.mensalidade || (d.config.mensalidadePadrao || 60), cobrarDesde: desde,
+        obs: a.obs || '', regularizacao: a.regularizacao || '', ativo: a.ativo !== false, terrenos: a.terrenos || [], pagos: p, abertos: abertos, situacao: situacaoPor(abertos.length) };
+    }).sort(ordemCh);
+  }
+
+  // ---------- Saldo e campanhas ----------
+  function saldoAte(dataLimite) {
+    var c = D().config, s = Number(c.saldoInicial) || 0;
+    ativos().forEach(function (l) { if (l.data >= c.dataAbertura && (!dataLimite || l.data < dataLimite)) s += l.tipo === 'Entrada' ? l.valor : -l.valor; });
+    return Math.round(s * 100) / 100;
+  }
+  function campanhasTot(incluirOcultas) {
+    var ls = ativos();
+    return (D().campanhas || []).filter(function (c) { return incluirOcultas || !c.oculta; }).map(function (c) {
+      var da = ls.filter(function (l) { return l.campanha === c.id; }), contrib = {};
+      da.forEach(function (l) { if (l.tipo === 'Entrada' && l.chacara) contrib[l.chacara] = 1; });
+      return { id: c.id, nome: c.nome, descricao: c.descricao, meta: c.meta, inicio: c.inicio, status: c.status, oculta: !!c.oculta,
+        arrecadado: r2(tot(da.filter(function (l) { return l.tipo === 'Entrada'; }))), gasto: r2(tot(da.filter(function (l) { return l.tipo === 'Saída'; }))), contribuintes: Object.keys(contrib).length };
+    });
+  }
+  function r2(n) { return Math.round(n * 100) / 100; }
+
+  // ---------- Consultas (mesmo formato do servidor) ----------
+  var LOCAL = {
+    resumoPublico: function (ym) {
+      var d = D(); ym = ym || mesAtualL();
+      var ls = ativos().filter(function (l) { return l.data.slice(0, 7) === ym; });
+      var camps = campanhasTot(false), nomes = {}; camps.forEach(function (c) { nomes[c.id] = c.nome; });
+      var linha = function (l) { return { id: l.id, comprovante: l.tipo === 'Saída' && l.comprovante, data: l.data, tipo: l.tipo, categoria: l.categoria,
+        campanha: nomes[l.campanha] || '', chacara: l.chacara, mes: l.mes, descricao: l.categoria === 'Mensalidade' ? '' : l.descricao, valor: l.valor, pendente: l.pendente }; };
+      var porData = function (a, b) { return a.data.localeCompare(b.data); };
+      var adim = adimplencia(false);
+      var t = { emDia: 0, atrasado: 0, inadimplente: 0 };
+      adim.forEach(function (a) { if (a.situacao === 'em dia') t.emDia++; else if (a.situacao === 'atrasado') t.atrasado++; else t.inadimplente++; });
+      var ent = ls.filter(function (l) { return l.tipo === 'Entrada'; }), sai = ls.filter(function (l) { return l.tipo === 'Saída'; });
+      return { nome: d.config.nomeAssociacao, mes: ym, mesAtual: mesAtualL(), saldoAtual: saldoAte(), entradasMes: r2(tot(ent)), saidasMes: r2(tot(sai)),
+        entradas: ent.sort(porData).map(linha), saidas: sai.sort(porData).map(linha), campanhas: camps.filter(function (c) { return !c.oculta; }),
+        chacaras: adim.map(function (a) { return { chacara: a.chacara, situacao: a.situacao, abertos: a.abertos.length }; }), totais: t,
+        regras: { atraso: d.config.mesesAtraso, inadimplente: d.config.mesesInadimplente }, atualizadoEm: DB.sinc || d.geradoEm };
+    },
+    infoReserva: function () {
+      var d = D();
+      return { periodos: d.config.periodos, taxa: d.config.taxaReserva, limite: d.config.limiteReservasMes,
+        chacaras: (d.associados || []).filter(function (a) { return a.ativo !== false; }).slice().sort(ordemCh).map(function (a) { return a.chacara; }), hoje: hojeLocal() };
+    },
+    calendario: function (ym) {
+      return (D().reservas || []).filter(function (r) { return (r.status || 'Ativa') === 'Ativa' && String(r.dia).slice(0, 7) === ym; })
+        .map(function (r) { return { dia: r.dia, periodo: r.periodo, tipo: r.tipo }; });
+    },
+    painel: function () {
+      var d = D(), hj = hojeLocal();
+      var futuras = (d.reservas || []).filter(function (r) { return r.status === 'Ativa' && r.dia >= hj; }).sort(function (a, b) { return a.dia.localeCompare(b.dia); });
+      return { usuario: d.usuario || S.usuario, saldoAtual: saldoAte(), associados: adimplencia(false), todosAssociados: adimplencia(true), campanhas: campanhasTot(true),
+        config: d.configLista, periodos: d.config.periodos, mensalidadePadrao: d.config.mensalidadePadrao || 60, pagadores: [],
+        avisosPendentes: (d.avisos || []).length, taxasPendentes: futuras.filter(function (r) { return r.taxa > 0 && !r.taxaPaga; }).length,
+        proximasReservas: futuras.slice(0, 5), hoje: hj, mesAtual: mesAtualL(), filaPendente: DB.fila.length };
+    },
+    listarLancamentos: function (ym) {
+      return lancamentos().filter(function (l) { return l.data.slice(0, 7) === ym; })
+        .sort(function (a, b) { return b.data.localeCompare(a.data) || String(b.id).localeCompare(String(a.id)); });
+    },
+    historicoChacara: function (ch) {
+      var a = adimplencia(true).filter(function (x) { return x.chacara === ch && x.ativo; })[0] || adimplencia(true).filter(function (x) { return x.chacara === ch; })[0] || null;
+      var meses = a ? seqMeses(a.cobrarDesde, ultimoDevido()).reverse().map(function (m) { var l = a.pagos[m]; return { mes: m, pago: !!l, data: l ? l.data : '', valor: l ? l.valor : a.mensalidade, pagoPor: l ? l.pagoPor : '' }; }) : [];
+      return { associado: a, meses: meses,
+        movimentos: lancamentos().filter(function (l) { return l.chacara === ch; }).sort(function (x, y) { return y.data.localeCompare(x.data); }),
+        reservas: (D().reservas || []).filter(function (r) { return r.chacara === ch; }).sort(function (x, y) { return y.dia.localeCompare(x.dia); }) };
+    },
+    relatorioMes: function (ym) {
+      var ls = ativos().filter(function (l) { return l.data.slice(0, 7) === ym; }).sort(function (a, b) { return a.data.localeCompare(b.data); });
+      var agrupa = function (tipo) {
+        var g = {};
+        ls.filter(function (l) { return l.tipo === tipo; }).forEach(function (l) { var k = l.categoria === 'Campanha' ? 'Campanha: ' + l.campanhaNome : l.categoria; g[k] = r2((g[k] || 0) + l.valor); });
+        return Object.keys(g).map(function (k) { return { categoria: k, valor: g[k] }; }).sort(function (a, b) { return b.valor - a.valor; });
+      };
+      var e = r2(tot(ls.filter(function (l) { return l.tipo === 'Entrada'; }))), s = r2(tot(ls.filter(function (l) { return l.tipo === 'Saída'; })));
+      var ant = saldoAte(ym + '-01');
+      return { mes: ym, saldoAnterior: ant, entradas: e, saidas: s, saldoFinal: r2(ant + e - s), entradasPorCategoria: agrupa('Entrada'), saidasPorCategoria: agrupa('Saída'), lancamentos: ls };
+    },
+    relatorioCampanha: function (id) {
+      var c = campanhasTot(true).filter(function (x) { return x.id === id; })[0];
+      var da = ativos().filter(function (l) { return l.campanha === id; }).sort(function (a, b) { return a.data.localeCompare(b.data); });
+      var por = {};
+      da.filter(function (l) { return l.tipo === 'Entrada'; }).forEach(function (l) { var k = l.chacara || 'Sem chácara'; por[k] = r2((por[k] || 0) + l.valor); });
+      return { campanha: c, porChacara: Object.keys(por).map(function (k) { return { chacara: k, valor: por[k] }; }).sort(ordemCh), lancamentos: da };
+    },
+    relatorioAdimplencia: function () {
+      var c = D().config;
+      return { regras: { atraso: c.mesesAtraso, inadimplente: c.mesesInadimplente, vencimento: c.diaVencimento },
+        associados: adimplencia(false).map(function (a) { return Object.assign({}, a, { devendo: r2(a.abertos.length * a.mensalidade) }); }) };
+    },
+    reservasDiretoria: function () {
+      var d = D(), hj = hojeLocal(), rs = d.reservas || [];
+      var ord = function (a, b) { return a.dia.localeCompare(b.dia) || String(a.pedidoEm).localeCompare(String(b.pedidoEm)); };
+      return { ativas: rs.filter(function (r) { return r.status === 'Ativa' && r.dia >= hj; }).sort(ord), fila: rs.filter(function (r) { return r.status === 'Fila' && r.dia >= hj; }).sort(ord),
+        encerradas: rs.filter(function (r) { return (r.status !== 'Ativa' && r.status !== 'Fila') || r.dia < hj; }).sort(function (a, b) { return b.dia.localeCompare(a.dia); }).slice(0, 40),
+        avisos: (d.avisos || []).slice().sort(function (a, b) { return String(b.criadoEm).localeCompare(String(a.criadoEm)); }) };
+    },
+    listarUsuarios: function () { return (D().usuarios || []); }
+  };
+
+  // Consulta: usa os dados do aparelho; se ainda não houver, sincroniza antes.
+  function consultar(fn) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    var precisaDir = ['painel', 'listarLancamentos', 'historicoChacara', 'relatorioMes', 'relatorioCampanha', 'relatorioAdimplencia', 'reservasDiretoria', 'listarUsuarios'].indexOf(fn) >= 0;
+    var pronto = precisaDir ? !!(S.token && DB.dir) : temDados();
+    if (pronto) { try { return Promise.resolve(LOCAL[fn].apply(null, args)); } catch (e) { return Promise.reject(e); } }
+    return sincronizar().then(function () { return LOCAL[fn].apply(null, args); });
+  }
+
+  // ---------- Sincronização ----------
+  function sincronizar(manual) {
+    if (DB.sincronizando) return DB.sincronizando;
+    if (navigator.onLine === false) { DB.online = false; atualizaBarra(); return temDados() && (!S.token || DB.dir) ? Promise.resolve(false) : Promise.reject(new Error('Sem internet. Conecte-se para carregar os dados pela primeira vez.')); }
+    atualizaBarra(true);
+    DB.sincronizando = enviarFila().then(function () {
+      return S.token ? chamar('sincronizarDiretoria', S.token) : chamar('sincronizarPublico');
+    }).then(function (dados) {
+      DB.online = true;
+      DB.sinc = isoLocal(new Date()) + 'T' + new Date().toTimeString().slice(0, 8);
+      try { localStorage.setItem('siriema_sinc', DB.sinc); } catch (e) { }
+      if (S.token) { DB.dir = dados; S.usuario = dados.usuario; gravarJSON('siriema_dir2', dados); }
+      else { DB.pub = dados; gravarJSON('siriema_pub2', dados); }
+      _cacheLanc.fonte = null;
+      DB.sincronizando = null; atualizaBarra(); desenhaNav();
+      if (manual) aviso('Dados atualizados.');
+      redesenhaSePuder();
+      return true;
+    }, function (e) {
+      DB.sincronizando = null;
+      var msg = (e && e.message) || String(e);
+      if (msg.indexOf('SESSAO_') === 0) { atualizaBarra(); throw e; }
+      if (/Failed to fetch|NetworkError|Load failed|internet|network/i.test(msg)) DB.online = false;
+      atualizaBarra();
+      if (temDados() && (!S.token || DB.dir)) { if (manual) aviso('Não foi possível sincronizar agora. Mostrando os dados guardados.', 'erro'); return false; }
+      throw e;
+    });
+    return DB.sincronizando;
+  }
+  // Telas só de leitura são redesenhadas com os dados novos; formulários não são interrompidos.
+  function redesenhaSePuder() {
+    var leitura = ['inicio', 'chacaras', 'painel', 'movimentos', 'associados', 'campanhas', 'reservas', 'relatorios'];
+    if (leitura.indexOf(S.vista) < 0 || $('#modalRaiz').innerHTML) return;
+    var y = window.scrollY, abertos = $$('details.grupo[open]').map(function (dd) { return dd.dataset.k; });
+    try { VISTAS[S.vista]($('#conteudo')); } catch (e) { }
+    abertos.forEach(function (k) { $$('details.grupo').forEach(function (dd) { if (dd.dataset.k === k) dd.open = true; }); });
+    window.scrollTo(0, y);
+  }
+
+  // ---------- Fila de envio (lançamentos feitos sem internet) ----------
+  function enfileirar(fn, dados) {
+    var item = { uid: 'P' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), fn: fn, dados: dados, criadoEm: new Date().toISOString(), erro: '' };
+    DB.fila.push(item); gravarJSON('siriema_fila', DB.fila); _cacheLanc.fonte = null; atualizaBarra();
+    return item;
+  }
+  function enviarFila() {
+    if (!S.token || !DB.fila.length || navigator.onLine === false) return Promise.resolve();
+    var pend = DB.fila.filter(function (f) { return !f.erro; });
+    return pend.reduce(function (p, f) {
+      return p.then(function () {
+        return chamar(f.fn, S.token, f.dados).then(function () {
+          DB.fila = DB.fila.filter(function (x) { return x.uid !== f.uid; }); gravarJSON('siriema_fila', DB.fila);
+        }, function (e) {
+          var msg = (e && e.message) || String(e);
+          if (/Failed to fetch|NetworkError|Load failed/i.test(msg) || msg.indexOf('SESSAO_') === 0) throw e;
+          f.erro = msg; gravarJSON('siriema_fila', DB.fila);
+        });
+      });
+    }, Promise.resolve()).then(function () { _cacheLanc.fonte = null; atualizaBarra(); });
+  }
+  function descartarFila(uid) { DB.fila = DB.fila.filter(function (x) { return x.uid !== uid; }); gravarJSON('siriema_fila', DB.fila); _cacheLanc.fonte = null; atualizaBarra(); }
+  function tentarFila(uid) { DB.fila.forEach(function (x) { if (x.uid === uid) x.erro = ''; }); gravarJSON('siriema_fila', DB.fila); return sincronizar(true); }
+
+  // ---------- Barra de sincronização ----------
+  function quandoSinc() {
+    if (!DB.sinc) return 'ainda não sincronizado';
+    var d = DB.sinc.slice(0, 10), h = DB.sinc.slice(11, 16);
+    return (d === hojeLocal() ? 'hoje' : dataBR(d)) + ' às ' + h;
+  }
+  function atualizaBarra(girando) {
+    var b = $('#sincBar'); if (!b) return;
+    var off = navigator.onLine === false || !DB.online;
+    var pend = DB.fila.filter(function (f) { return !f.erro; }).length, erros = DB.fila.filter(function (f) { return f.erro; }).length;
+    var html;
+    if (off) {
+      html = '<div class="sinc off" role="status">' + ic('alerta') + '<div><strong>Sem internet.</strong> Você está vendo os dados da última sincronização (' + quandoSinc() + '). ' +
+        'Abra o aplicativo com internet e toque em Sincronizar para ver as informações mais atuais.' + (pend ? ' <strong>' + pend + ' lançamento(s) aguardando envio.</strong>' : '') + '</div>' +
+        '<button type="button" class="btn peq sec" data-acao="sincronizar">' + ic('relogio') + 'Sincronizar</button></div>';
+    } else {
+      html = '<div class="sinc' + (erros ? ' erro' : '') + '" role="status">' + (girando ? '<span class="gira" aria-hidden="true"></span>' : ic(erros ? 'alerta' : 'ok')) +
+        '<span>' + (girando ? 'Sincronizando…' : 'Atualizado ' + quandoSinc()) + (pend ? ' · ' + pend + ' aguardando envio' : '') + (erros ? ' · ' + erros + ' não enviado(s)' : '') + '</span>' +
+        '<button type="button" class="sinc-btn" data-acao="sincronizar"' + (girando ? ' disabled' : '') + '>Sincronizar</button></div>';
+    }
+    b.innerHTML = html;
+  }
+  window.addEventListener('online', function () { DB.online = true; atualizaBarra(); sincronizar(); });
+  window.addEventListener('offline', function () { DB.online = false; atualizaBarra(); });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible' || navigator.onLine === false) return;
+    var ultima = DB.sinc ? new Date(DB.sinc).getTime() : 0;
+    if (Date.now() - ultima > 120000) sincronizar();
+  });
+  setInterval(function () { if (document.visibilityState === 'visible' && navigator.onLine !== false) sincronizar(); }, 300000);
+  function precisaInternet() {
+    if (navigator.onLine === false) { aviso('Sem internet. Esta ação precisa de conexão; tente de novo quando estiver conectado.', 'erro'); return true; }
+    return false;
+  }
+
+  // ---------- Tabela de adimplência mês a mês ----------
+  function estadoMes(a, m, fim) {
+    if (a.pagos && a.pagos[m]) return 'pg';
+    if (m < a.cobrarDesde) return 'nc';
+    if (m > fim) return 'av';
+    return difMeses(m, fim) + 1 >= 3 ? 'r' : 'a';
+  }
+  // No celular a tabela rola de lado: abre mostrando os meses mais recentes.
+  function rolaGrade() { setTimeout(function () { $$('.grade-wrap').forEach(function (w) { w.scrollLeft = w.scrollWidth; }); }, 0); }
+  var ROT_EST = { pg: 'pago', a: 'em atraso', r: '3 meses ou mais de atraso', nc: 'não cobrado', av: 'ainda não venceu' };
+  function gradeAdim(lista, opc) {
+    opc = opc || {};
+    var fimJan = S.gradeFim || mesAtualL(), meses = seqMeses(somaMes(fimJan, -11), fimJan), fim = ultimoDevido();
+    var nav = '<div class="grade-nav nao-imprimir"><button type="button" class="btn sec peq" data-acao="gradeNav" data-n="-12">' + ic('esq') + '12 meses anteriores</button>' +
+      '<strong>' + mesCurto(meses[0]) + ' a ' + mesCurto(meses[11]) + '</strong>' +
+      '<button type="button" class="btn sec peq" data-acao="gradeNav" data-n="12"' + (fimJan >= mesAtualL() ? ' disabled' : '') + '>Mais recentes' + ic('dir') + '</button></div>';
+    var leg = '<div class="legenda-grade"><span><i class="q pg"></i>Pago</span><span><i class="q a"></i>Em atraso</span><span><i class="q r"></i>3 meses ou mais de atraso</span>' +
+      '<span><i class="q av"></i>Ainda não venceu</span><span><i class="q nc"></i>Não cobrado</span></div>';
+    var cab = '<tr><th class="fixa">Chácara</th>' + (opc.nomes ? '<th class="nome-col">Nome</th>' : '') + meses.map(function (m) {
+      return '<th class="mes-col"><span>' + MESES_C[Number(m.slice(5)) - 1] + '</span><small>' + m.slice(2, 4) + '</small></th>';
+    }).join('') + '<th>Situação</th></tr>';
+    var linhas = lista.map(function (a) {
+      var chCel = opc.editar ? '<button type="button" class="ch-btn" data-acao="editarCh" data-ch="' + esc(a.chacara) + '" aria-label="Editar cadastro da chácara ' + esc(a.chacara) + '">' + esc(a.chacara) + ic('lapis') + '</button>' : esc(a.chacara);
+      return '<tr><th class="fixa" scope="row">' + chCel + '</th>' + (opc.nomes ? '<td class="nome-col">' + esc(a.nome) + (textoTerrenos(a) ? '<small class="ter-info">' + esc(textoTerrenos(a)) + '</small>' : '') + '</td>' : '') +
+        meses.map(function (m) { var e = estadoMes(a, m, fim); return '<td class="cel"><span class="q ' + e + '" title="' + mesCurto(m) + ': ' + ROT_EST[e] + '"><span class="sr">' + mesCurto(m) + ': ' + ROT_EST[e] + '</span>' + (e === 'pg' ? ic('ok') : e === 'r' ? ic('x') : '') + '</span></td>'; }).join('') +
+        '<td>' + selo(a.situacao) + '</td></tr>';
+    }).join('');
+    rolaGrade();
+    return nav + leg + '<div class="tabela grade-wrap"><table class="grade-adim"><thead>' + cab + '</thead><tbody>' + (linhas || '<tr><td colspan="15">Nenhuma chácara.</td></tr>') + '</tbody></table></div>';
+  }
+
 
   // ---------- Ícones ----------
   var P = {
@@ -626,7 +989,10 @@ tfoot td { font-weight: 700; background: var(--papel); }
     setTimeout(function () { var f = $('#modalRaiz .fechar'); if (f) f.focus(); }, 30);
   }
   function fecharModal() { $('#modalRaiz').innerHTML = ''; document.body.style.overflow = ''; if (focoAntes && focoAntes.focus) focoAntes.focus(); }
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#modalRaiz').innerHTML) fecharModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && $('#modalRaiz').innerHTML) fecharModal();
+    if (e.key === 'Enter' && e.target.matches && e.target.matches('tr.linha-clicavel')) { e.preventDefault(); e.target.click(); }
+  });
 
   // ---------- Navegação ----------
   var NAV_PUB = [
@@ -699,7 +1065,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
     var pct = c.meta > 0 ? Math.min(100, Math.round(c.arrecadado / c.meta * 100)) : null;
     return '<article class="cartao campanha">' +
       '<div class="top"><div><h3>' + esc(c.nome) + '</h3>' + (c.descricao ? '<p class="suave" style="margin-top:4px">' + esc(c.descricao) + '</p>' : '') + '</div>' +
-      (c.status === 'Concluída' ? '<span class="selo ok">' + ic('ok') + 'Concluída</span>' : '<span class="selo atr">' + ic('relogio') + 'Em andamento</span>') + '</div>' +
+      '<span class="btns" style="gap:6px">' + (c.oculta ? '<span class="selo neutro">' + ic('olho') + 'Oculta no portal</span>' : '') + (c.status === 'Concluída' ? '<span class="selo ok">' + ic('ok') + 'Concluída</span>' : '<span class="selo atr">' + ic('relogio') + 'Em andamento</span>') + '</span></div>' +
       (pct !== null ? '<div><div class="barra" role="progressbar" aria-label="Arrecadado da meta" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div>' +
         '<p class="peq suave" style="margin-top:6px"><strong style="color:var(--tinta)">' + pct + '%</strong> da meta de ' + brl(c.meta) + '</p></div>' : '') +
       '<div class="numeros"><div><span class="l">Arrecadado</span><span class="v">' + brl(c.arrecadado) + '</span></div>' +
@@ -713,7 +1079,8 @@ tfoot td { font-weight: 700; background: var(--papel); }
     var ent = l.tipo === 'Entrada';
     var titulo = l.categoria === 'Mensalidade' ? 'Chácara ' + l.chacara : (l.descricao || l.categoria);
     var sub = l.categoria === 'Mensalidade' ? 'Mensalidade de ' + mesCurto(l.mes) : (l.campanha ? 'Campanha ' + l.campanha : l.categoria) + (l.chacara && l.categoria !== 'Mensalidade' ? ' · chácara ' + l.chacara : '');
-    return '<li><span class="ic ' + (ent ? 'ent' : 'sai') + '">' + ic(ent ? 'entra' : 'sai') + '</span><span class="txt"><strong>' + esc(titulo) + '</strong><span>' + dataBR(l.data) + ' · ' + esc(sub) + '</span></span>' +
+    return '<li><span class="ic ' + (ent ? 'ent' : 'sai') + '">' + ic(ent ? 'entra' : 'sai') + '</span><span class="txt"><strong>' + esc(titulo) + '</strong><span>' + dataBR(l.data) + ' · ' + esc(sub) + '</span>' +
+      (l.comprovante ? '<br><button class="btn-comp" type="button" data-acao="verCompPub" data-id="' + esc(l.id) + '">' + ic('olho') + 'Ver comprovante</button>' : '') + '</span>' +
       '<span class="val ' + (ent ? 'ent' : 'sai') + '">' + (ent ? '+ ' : '− ') + brl(l.valor) + '</span></li>';
   }
 
@@ -722,22 +1089,25 @@ tfoot td { font-weight: 700; background: var(--papel); }
     var g = {};
     lista.forEach(function (l) { var k = l.categoria === 'Campanha' ? 'Campanha ' + l.campanha : l.categoria; (g[k] = g[k] || []).push(l); });
     return Object.keys(g).sort(function (a, b) { return tot(g[b]) - tot(g[a]); }).map(function (k) {
-      return '<details class="grupo"><summary><span class="seta">' + ic('dir') + '</span><span class="nome">' + esc(k) + ' <span class="suave peq">(' + g[k].length + ')</span></span><span class="val">' + brl(tot(g[k])) + '</span></summary>' +
+      return '<details class="grupo" data-k="' + esc(tipo + ':' + k) + '"><summary><span class="seta">' + ic('dir') + '</span><span class="nome">' + esc(k) + ' <span class="suave peq">(' + g[k].length + ')</span></span><span class="val">' + brl(tot(g[k])) + '</span></summary>' +
         '<ul class="lista">' + g[k].map(linhaPub).join('') + '</ul></details>';
     }).join('');
   }
   function tot(a) { return a.reduce(function (s, l) { return s + Number(l.valor || 0); }, 0); }
 
   VISTAS.inicio = function (c) {
-    var ym = S.mesPub;
-    chamar('resumoPublico', ym).then(function (r) {
+    var ym = S.mesPub || mesAtualLocal();
+    consultar('resumoPublico', ym).then(function (r) { if (S.vista === 'inicio') desenhaInicio(c, r); }).catch(function (e) { falha(e, c); });
+  };
+  function desenhaInicio(c, r) {
+    {
       S.publico = r; if (!S.mesPub) S.mesPub = r.mes;
       var ativas = r.campanhas.filter(function (x) { return x.status !== 'Concluída'; });
       var concl = r.campanhas.filter(function (x) { return x.status === 'Concluída'; });
       c.innerHTML = '<div class="pilha">' +
         '<section class="heroi" aria-labelledby="hSaldo"><div class="ave marca-dagua" aria-hidden="true"></div>' +
         '<span class="rotulo" id="hSaldo">Saldo em caixa hoje</span><div class="saldo">' + brl(r.saldoAtual) + '</div>' +
-        '<p class="quando">Atualizado em ' + dataBR(r.atualizadoEm) + ' às ' + String(r.atualizadoEm).slice(11, 16) + '</p>' +
+        '<p class="quando">Dados sincronizados ' + quandoSinc() + '</p>' +
         '<div style="margin-top:18px;position:relative">' + mesNav('mesPub', r.mes, r.mesAtual) + '</div>' +
         '<div class="mini"><div><span class="l">' + ic('entra') + 'Entrou</span><span class="v">' + brl(r.entradasMes) + '</span></div>' +
         '<div><span class="l">' + ic('sai') + 'Saiu</span><span class="v">' + brl(r.saidasMes) + '</span></div></div></section>' +
@@ -753,51 +1123,49 @@ tfoot td { font-weight: 700; background: var(--papel); }
           '<div class="pilha">' +
             '<section class="pilha" aria-labelledby="hCamp" style="gap:14px"><div><span class="rotulo">Campanhas</span><h2 id="hCamp">Arrecadações com meta</h2></div>' +
             (ativas.concat(concl).map(campanhaHTML).join('') || '<div class="cartao">' + vazio('Nenhuma campanha ainda.') + '</div>') + '</section>' +
-            '<section class="cartao" aria-labelledby="hSit"><span class="rotulo">Mensalidades</span><h2 id="hSit" style="margin-bottom:14px">Situação das chácaras</h2>' + contas(r.totais) +
+            '<section class="cartao" aria-labelledby="hSit"><span class="rotulo">Mensalidades</span><h2 id="hSit" style="margin-bottom:14px">Situação das chácaras</h2>' + contas(r.totais, true) +
             '<button class="btn sec largo" type="button" data-ir="chacaras" style="margin-top:16px">' + ic('grade') + 'Ver todas as chácaras</button></section>' +
           '</div>' +
         '</div>' +
         '<p class="rodape-pag">Associação Rural Recanto da Siriema · transparência das contas para todos os associados</p>' +
       '</div>';
-    }).catch(function (e) { falha(e, c); });
-  };
+    }
+  }
+  function mesAtualLocal() { return mesDe(isoLocal(new Date())); }
+  function lerGuardado(k) { try { var t = localStorage.getItem(k); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
+  function guardar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } }
 
-  function contas(t) {
-    return '<div class="contas">' +
+  function contas(t, linhas) {
+    return '<div class="contas' + (linhas ? ' linhas' : '') + '">' +
       '<div class="conta ok"><span class="n">' + t.emDia + '</span><span class="t">' + ic('ok') + 'Em dia</span></div>' +
       '<div class="conta atr"><span class="n">' + t.atrasado + '</span><span class="t">' + ic('relogio') + 'Atrasadas</span></div>' +
       '<div class="conta inad"><span class="n">' + t.inadimplente + '</span><span class="t">' + ic('x') + 'Inadimplentes</span></div></div>';
   }
 
   VISTAS.chacaras = function (c) {
-    var p = S.publico ? Promise.resolve(S.publico) : chamar('resumoPublico', S.mesPub);
-    p.then(function (r) {
+    consultar('resumoPublico', mesAtualLocal()).then(function (r) {
       S.publico = r;
       c.innerHTML = '<div class="pilha">' +
         '<div class="titulo-pag"><span class="rotulo">Mensalidades</span><h1>Situação das chácaras</h1>' +
         '<p>Mostramos só o número da chácara. Com ' + r.regras.atraso + ' ou ' + (r.regras.inadimplente - 1) + ' meses em aberto, a chácara fica <strong>atrasada</strong>. Com ' + r.regras.inadimplente + ' meses ou mais, fica <strong>inadimplente</strong> e não pode votar nem reservar a área de lazer.</p></div>' +
         contas(r.totais) +
         '<div class="busca">' + ic('lupa') + '<label class="sr" for="buscaCh">Procurar chácara</label><input id="buscaCh" inputmode="numeric" placeholder="Digite o número da sua chácara" value="' + esc(S.filtroCh) + '" autocomplete="off"></div>' +
-        '<div class="chacaras" id="gradeCh"></div></div>';
+        '<section class="cartao pilha" style="gap:12px" id="gradeCh"></section></div>';
       desenhaChacaras();
       $('#buscaCh').addEventListener('input', function (e) { S.filtroCh = e.target.value; desenhaChacaras(); });
     }).catch(function (e) { falha(e, c); });
   };
+  function filtraCh(l, f) { f = String(f || '').trim().toLowerCase(); return l.filter(function (x) { return !f || String(x.chacara).split('/').some(function (p) { return p.indexOf(f) === 0; }) || (x.nome && x.nome.toLowerCase().indexOf(f) >= 0); }); }
   function desenhaChacaras() {
-    var f = S.filtroCh.trim();
-    var l = S.publico.chacaras.filter(function (x) { return !f || String(x.chacara).split('/').some(function (p) { return p.indexOf(f) === 0; }); });
-    $('#gradeCh').innerHTML = l.length ? l.map(function (x) {
-      var s = SIT[x.situacao];
-      return '<div class="chacara ' + s.c + '"><span class="n"><small>Chácara</small>' + esc(x.chacara) + '</span>' + selo(x.situacao) +
-        (x.abertos ? '<span class="peq suave">' + x.abertos + ' mês' + (x.abertos > 1 ? 'es' : '') + ' em aberto</span>' : '') + '</div>';
-    }).join('') : '<div style="grid-column:1/-1">' + vazio('Nenhuma chácara com esse número.') + '</div>';
+    var l = filtraCh(adimplencia(false), S.filtroCh);
+    $('#gradeCh').innerHTML = l.length ? gradeAdim(l, {}) : vazio('Nenhuma chácara com esse número.');
   }
 
   // ---------- Reserva ----------
   VISTAS.reservar = function (c) {
     if (!S.mesCal) S.mesCal = mesDe(hoje());
-    Promise.all([S.info ? Promise.resolve(S.info) : chamar('infoReserva'), chamar('calendario', S.mesCal)]).then(function (res) {
-      S.info = res[0]; S.cal = res[1];
+    Promise.all([consultar('infoReserva'), consultar('calendario', S.mesCal)]).then(function (res) {
+      S.info = res[0]; S.cal = res[1]; S.calCache[S.mesCal] = res[1];
       if (!S.periodoSel) S.periodoSel = S.info.periodos[S.info.periodos.length - 1];
       var opts = '<option value="">Escolha a sua chácara</option><option value="__nao">Não sou associado</option>' +
         S.info.chacaras.map(function (ch) { return '<option value="' + esc(ch) + '">Chácara ' + esc(ch) + '</option>'; }).join('');
@@ -881,6 +1249,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
     var per = ($('input[name=periodo]:checked') || {}).value;
     if (!per) { msg.innerHTML = caixa('atr', 'Falta escolher o período', 'Escolha manhã, tarde, noite ou o dia inteiro.'); return; }
     if (!ch) { msg.innerHTML = caixa('atr', 'Falta escolher a chácara', 'Se você não é associado, escolha "Não sou associado".'); $('#rCh').focus(); return; }
+    if (navigator.onLine === false) { msg.innerHTML = caixa('atr', 'Sem internet', 'Para reservar é preciso estar conectado, porque o sistema confere se a data está livre. Tente de novo quando tiver internet.'); return; }
     var btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = 'Enviando…';
     chamar('reservar', { dia: S.diaSel, periodo: per, chacara: ch === '__nao' ? '' : ch, nome: $('#rNome').value, celular: $('#rCel').value }).then(function (r) {
       btn.disabled = false; btn.innerHTML = ic('cal') + 'Pedir reserva';
@@ -892,7 +1261,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
           (r.pix ? '<div class="pix"><code>' + esc(r.pix) + '</code><button class="btn peq sec" type="button" data-acao="copiarTexto" data-texto="' + esc(r.pix) + '">' + ic('copiar') + 'Copiar chave Pix</button></div>' : '<p>A diretoria vai enviar a chave Pix.</p>');
       }
       msg.innerHTML = caixa(r.taxa ? 'info' : 'ok', r.titulo, r.mensagem, extra);
-      return chamar('calendario', S.mesCal).then(function (cal) { S.cal = cal; desenhaCal(); desenhaPeriodos(); });
+      return sincronizar().then(function () { S.cal = LOCAL.calendario(S.mesCal); desenhaCal(); desenhaPeriodos(); });
     }).catch(function (e) {
       btn.disabled = false; btn.innerHTML = ic('cal') + 'Pedir reserva';
       msg.innerHTML = caixa('inad', 'Não foi possível reservar', e.message || String(e));
@@ -917,9 +1286,10 @@ tfoot td { font-weight: 700; background: var(--papel); }
   function entrar(f) {
     var btn = f.querySelector('button[type=submit]'); btn.disabled = true;
     chamar('login', $('#lU').value, $('#lS').value).then(function (r) {
-      S.token = r.token; S.usuario = r.usuario; guarda('siriema_token', r.token);
+      S.token = r.token; S.usuario = r.usuario; guarda('siriema_token', r.token); DB.dir = null;
       if (r.usuario.trocarSenha) { abrirTrocaSenha(true); return; }
-      ir('painel');
+      $('#loginMsg').innerHTML = caixa('info', 'Entrando…', 'Baixando os dados da diretoria para este aparelho.');
+      sincronizar().then(function () { ir('painel'); }, function (e) { btn.disabled = false; falha(e, $('#loginMsg')); });
     }).catch(function (e) { btn.disabled = false; $('#loginMsg').innerHTML = caixa('inad', 'Não foi possível entrar', e.message); });
   }
 
@@ -936,17 +1306,22 @@ tfoot td { font-weight: 700; background: var(--papel); }
   }
   function salvarSenha() {
     if ($('#sN').value !== $('#sN2').value) { $('#senhaMsg').innerHTML = caixa('atr', 'As senhas não são iguais', 'Digite a mesma senha nova nos dois campos.'); return; }
-    chamar('trocarSenha', S.token, $('#sA').value, $('#sN').value).then(function (u) { S.usuario = u; aviso('Senha salva.'); ir('painel'); })
+    chamar('trocarSenha', S.token, $('#sA').value, $('#sN').value).then(function (u) { S.usuario = u; aviso('Senha salva.'); return sincronizar().then(function () { ir('painel'); }); })
       .catch(function (e) { $('#senhaMsg').innerHTML = caixa('inad', 'Não foi possível salvar', e.message); });
   }
 
   // ======================================================
   // DIRETORIA
   // ======================================================
-  function carregaPainel() {
-    return chamar('painel', S.token).then(function (p) { S.painel = p; S.usuario = p.usuario; desenhaNav(); return p; });
+  // Usa o que já está na memória para abrir na hora e atualiza em segundo plano.
+  function carregaPainel(forcar) {
+    var p = forcar ? sincronizar().then(function () { return LOCAL.painel(); }) : consultar('painel');
+    return p.then(function (x) { S.painel = x; if (x.usuario) S.usuario = x.usuario; return x; });
   }
-  function assocPorCh(ch) { return (S.painel.associados || []).filter(function (a) { return a.chacara === String(ch); })[0]; }
+  function assocPorCh(ch) {
+    var l = (S.painel && S.painel.todosAssociados) || [];
+    return l.filter(function (a) { return a.chacara === String(ch) && a.ativo; })[0] || l.filter(function (a) { return a.chacara === String(ch); })[0];
+  }
 
   VISTAS.painel = function (c) {
     carregaPainel().then(function (p) {
@@ -960,6 +1335,9 @@ tfoot td { font-weight: 700; background: var(--papel); }
             '<section class="heroi"><div class="ave marca-dagua" aria-hidden="true"></div><span class="rotulo">Saldo em caixa</span><div class="saldo">' + brl(p.saldoAtual) + '</div>' +
             '<div class="btns" style="margin-top:18px;position:relative"><button class="btn" style="background:var(--oliva);color:var(--mata)" type="button" data-ir="lancar">' + ic('mais') + 'Lançar pagamento</button>' +
             '<button class="btn" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)" type="button" data-ir="relatorios">' + ic('grafico') + 'Relatórios</button></div></section>' +
+            (DB.fila.length ? '<div class="aviso ' + (DB.fila.some(function (f) { return f.erro; }) ? 'inad' : 'atr') + '">' + ic('relogio') + '<strong>' + DB.fila.length + ' lançamento(s) feitos neste aparelho ainda não foram enviados</strong>' +
+              '<p>' + (navigator.onLine === false ? 'Eles serão enviados sozinhos quando houver internet.' : 'Toque em Sincronizar para enviar agora. Os que tiverem problema aparecem em Movimentos.') + '</p>' +
+              '<div class="extra"><button class="btn sec peq" type="button" data-acao="sincronizar">Sincronizar agora</button></div></div>' : '') +
             '<div class="pendencias">' +
               '<button class="pendencia ' + (p.avisosPendentes ? 'atencao' : '') + '" type="button" data-acao="irReservas" data-aba="avisos"><span class="n">' + p.avisosPendentes + '</span><span class="t">Avisos para enviar</span><span class="s">Mensagens de reserva</span></button>' +
               '<button class="pendencia ' + (p.taxasPendentes ? 'atencao' : '') + '" type="button" data-acao="irReservas" data-aba="ativas"><span class="n">' + p.taxasPendentes + '</span><span class="t">Taxas a receber</span><span class="s">Reservas com taxa pendente</span></button>' +
@@ -996,10 +1374,58 @@ tfoot td { font-weight: 700; background: var(--papel); }
   function ligaValores(raiz) {
     $$('[data-valor]', raiz).forEach(function (i) { i.addEventListener('input', function () { var v = centavos(i.value); i.value = v ? fmtValorCampo(v) : ''; }); });
   }
-  function campoPagoPor(nomeAssoc) {
-    return '<div class="campo"><label for="lPor">Quem pagou?</label><input id="lPor" type="text" list="dlPor" placeholder="Pode ser filho, marido, esposa…" autocomplete="off">' +
-      '<datalist id="dlPor">' + S.painel.pagadores.map(function (n) { return '<option value="' + esc(n) + '"></option>'; }).join('') + '</datalist>' +
-      '<span class="dica">Deixe em branco se foi o próprio associado.</span></div>';
+  function campoPagoPor() {
+    return '<div class="campo"><label for="lPor">Nome de quem pagou</label><input id="lPor" type="text" placeholder="Escreva o nome de quem fez o pagamento" autocomplete="off">' +
+      '<span class="dica">Se foi o próprio associado, pode deixar em branco.</span></div>';
+  }
+  var ACEITA_ARQ = 'image' + '/' + '*,application' + '/' + 'pdf';
+  function campoArquivo(id) {
+    return '<div class="campo"><label for="' + id + '">Comprovante (foto ou PDF) <span class="suave" style="font-weight:400">· opcional</span></label>' +
+      '<input id="' + id + '" type="file" accept="' + ACEITA_ARQ + '" data-arquivo>' +
+      '<span class="dica">Tire uma foto do comprovante ou escolha um PDF. Ele fica guardado na pasta do Drive da associação.</span><div class="arq-prev" id="' + id + 'Prev"></div></div>';
+  }
+  function ligaArquivos(raiz) {
+    $$('[data-arquivo]', raiz).forEach(function (i) {
+      i.addEventListener('change', function () {
+        var f = i.files && i.files[0], prev = $('#' + i.id + 'Prev');
+        if (!prev) return;
+        if (!f) { prev.innerHTML = ''; return; }
+        var tam = f.size > 1048576 ? (f.size / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.round(f.size / 1024) + ' KB';
+        prev.innerHTML = (f.type.indexOf('image') === 0 ? '<img alt="" src="' + URL.createObjectURL(f) + '">' : '<span class="ic neu" style="width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--salvia-clara)">' + ic('lista') + '</span>') +
+          '<span><strong>' + esc(f.name) + '</strong><br><span class="suave peq">' + tam + '</span></span>';
+      });
+    });
+  }
+  // Lê o arquivo escolhido; fotos são reduzidas para subir rápido.
+  function lerArquivo(input) {
+    var f = input && input.files && input.files[0];
+    if (!f) return Promise.resolve(null);
+    if (f.size > 8 * 1048576 && f.type.indexOf('image') !== 0) return Promise.reject(new Error('O PDF é grande demais. O limite é 8 MB.'));
+    return new Promise(function (ok, erro) {
+      var rd = new FileReader();
+      rd.onerror = function () { erro(new Error('Não foi possível ler o arquivo.')); };
+      rd.onload = function () {
+        var url = rd.result;
+        if (f.type.indexOf('image') !== 0) { ok({ nome: f.name, tipo: f.type || 'application' + '/' + 'pdf', base64: String(url).split(',')[1] }); return; }
+        var img = new Image();
+        img.onload = function () {
+          var max = 1600, w = img.width, h = img.height, k = Math.min(1, max / Math.max(w, h));
+          var cv = document.createElement('canvas'); cv.width = Math.round(w * k); cv.height = Math.round(h * k);
+          cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+          var tipo = 'image' + '/' + 'jpeg';
+          ok({ nome: f.name.replace(/\.[^.]+$/, '') + '.jpg', tipo: tipo, base64: cv.toDataURL(tipo, 0.72).split(',')[1] });
+        };
+        img.onerror = function () { ok({ nome: f.name, tipo: f.type, base64: String(url).split(',')[1] }); };
+        img.src = url;
+      };
+      rd.readAsDataURL(f);
+    });
+  }
+  function mostraComprovante(arq, titulo) {
+    var url = 'data:' + arq.tipo + ';base64,' + arq.base64;
+    var html = arq.tipo.indexOf('image') === 0 ? '<div class="comp-view"><img alt="Comprovante" src="' + url + '"></div>' :
+      '<div class="comp-view"><iframe title="Comprovante em PDF" src="' + url + '"></iframe></div>';
+    abrirModal(titulo || 'Comprovante', html + '<p class="suave peq" style="margin-top:10px">' + esc(arq.nome) + '</p>');
   }
   function opcoesChacara(vazioTxt) {
     return '<option value="">' + esc(vazioTxt) + '</option>' + S.painel.associados.map(function (a) { return '<option value="' + esc(a.chacara) + '">Chácara ' + esc(a.chacara) + ' · ' + esc(a.nome) + '</option>'; }).join('');
@@ -1013,13 +1439,17 @@ tfoot td { font-weight: 700; background: var(--papel); }
         '<div id="mInfo"></div>' +
         '<div id="mResto" hidden>' +
           '<fieldset><legend>Quais meses está pagando?</legend><div class="opcoes" id="mMeses"></div></fieldset>' +
+          '<div class="campo" style="margin-top:14px"><label for="mOutro">Outro mês (atrasado ou adiantado)</label>' +
+            '<div class="btns"><input id="mOutro" type="month" style="flex:1 1 180px;min-width:0;width:auto"><button class="btn sec" type="button" data-acao="addMes">' + ic('mais') + 'Incluir</button></div>' +
+            '<span class="dica">Use para quem está pagando um mês antigo e se regularizando.</span></div>' +
           '<div class="dupla" style="margin-top:18px">' + campoValor('mValor', 0, 'Valor de cada mês') + '<div class="campo"><label for="mData">Data do pagamento</label><input id="mData" type="date" value="' + p.hoje + '" max="' + p.hoje + '"></div></div>' +
           '<div style="margin-top:18px">' + campoPagoPor() + '</div>' +
+          '<div style="margin-top:18px">' + campoArquivo('mArq') + '</div>' +
           '<div class="aviso info" style="margin-top:18px" id="mTotal"></div>' +
           '<div id="lancMsg" aria-live="polite" style="margin-top:18px"></div>' +
           '<button class="btn largo" type="submit" style="margin-top:18px">' + ic('ok') + 'Salvar mensalidade</button>' +
         '</div></form>';
-      ligaValores(corpo);
+      ligaValores(corpo); ligaArquivos(corpo);
       $('#mCh').addEventListener('change', mostraMeses);
       $('#mValor').addEventListener('input', totalMens);
     } else {
@@ -1032,9 +1462,10 @@ tfoot td { font-weight: 700; background: var(--papel); }
         '<div class="campo"><label for="eDesc">Descrição</label><input id="eDesc" type="text" placeholder="' + (ent ? 'Ex.: Doação para a festa' : 'Ex.: Conta de luz do poço') + '"></div>' +
         '<div class="dupla">' + campoValor('eValor', 0) + '<div class="campo"><label for="eData">Data</label><input id="eData" type="date" value="' + p.hoje + '"></div></div>' +
         (ent ? '<div class="dupla"><div class="campo"><label for="eCh">Chácara (se tiver)</label><select id="eCh">' + opcoesChacara('Nenhuma chácara') + '</select></div>' + campoPagoPor() + '</div>' : '') +
+        campoArquivo('eArq') +
         '<div id="lancMsg" aria-live="polite"></div>' +
         '<button class="btn largo" type="submit">' + ic('ok') + (ent ? 'Salvar entrada' : 'Salvar despesa') + '</button></form>';
-      ligaValores(corpo);
+      ligaValores(corpo); ligaArquivos(corpo);
       var campBox = $('#eCampBox');
       var atualiza = function () { campBox.hidden = $('#eCat').value !== 'Campanha'; };
       $('#eCat').addEventListener('change', atualiza); atualiza();
@@ -1054,9 +1485,21 @@ tfoot td { font-weight: 700; background: var(--papel); }
     }).join('') + futuros.map(function (mm) {
       return '<label class="opcao"><input type="checkbox" name="mes" value="' + mm + '"><span><span class="marca"></span><span>' + mesCurto(mm) + '<small>Adiantado</small></span></span></label>';
     }).join('');
-    $('#mMeses').innerHTML = html;
+    $('#mMeses').innerHTML = html || '';
+    if (!a.abertos.length) $('#mMeses').insertAdjacentHTML('beforebegin', '');
     $('#mValor').value = fmtValorCampo(a.mensalidade);
     $$('#mMeses input').forEach(function (i) { i.addEventListener('change', totalMens); });
+    totalMens();
+  }
+  function incluirMes() {
+    var v = $('#mOutro').value;
+    if (!/^\d{4}-\d{2}$/.test(v)) { aviso('Escolha o mês no campo "Outro mês".', 'erro'); return; }
+    var ja = $$('#mMeses input').filter(function (i) { return i.value === v; })[0];
+    if (ja) { ja.checked = true; totalMens(); return; }
+    var rot = v < S.painel.mesAtual ? 'Atrasado' : v > S.painel.mesAtual ? 'Adiantado' : 'Este mês';
+    $('#mMeses').insertAdjacentHTML('afterbegin', '<label class="opcao"><input type="checkbox" name="mes" value="' + v + '" checked><span><span class="marca"></span><span>' + mesCurto(v) + '<small>' + rot + '</small></span></span></label>');
+    $('#mMeses input').addEventListener('change', totalMens);
+    $('#mOutro').value = '';
     totalMens();
   }
   function totalMens() {
@@ -1065,30 +1508,48 @@ tfoot td { font-weight: 700; background: var(--papel); }
   }
   function salvarMens(f) {
     var meses = $$('#mMeses input:checked').map(function (i) { return i.value; });
-    var btn = f.querySelector('button[type=submit]'); btn.disabled = true;
-    chamar('lancarMensalidade', S.token, { chacara: $('#mCh').value, meses: meses, valorPorMes: centavos($('#mValor').value), data: $('#mData').value, pagoPor: $('#lPor').value })
-      .then(function (r) {
-        aviso('Mensalidade salva: ' + brl(r.total) + '.');
-        var ch = $('#mCh').value;
-        return carregaPainel().then(function () { desenhaLanc(); $('#mCh').value = ch; mostraMeses(); $('#lancMsg').innerHTML = caixa('ok', 'Pagamento salvo', 'Chácara ' + ch + ': ' + meses.map(mesCurto).join(', ') + ' · ' + brl(r.total)); });
-      }).catch(function (e) { btn.disabled = false; falha(e, $('#lancMsg')); });
+    var ch = $('#mCh').value, valor = centavos($('#mValor').value);
+    if (!meses.length) { $('#lancMsg').innerHTML = caixa('atr', 'Marque os meses', 'Marque pelo menos um mês que está sendo pago.'); return; }
+    if (!(valor > 0)) { $('#lancMsg').innerHTML = caixa('atr', 'Confira o valor', 'Informe o valor de cada mês.'); return; }
+    var jaPagos = (pagosPorChacara()[ch]) || {};
+    var rep = meses.filter(function (m) { return jaPagos[m]; });
+    if (rep.length) { $('#lancMsg').innerHTML = caixa('inad', 'Mês já pago', 'Estes meses já estão pagos: ' + rep.map(mesCurto).join(', ') + '.'); return; }
+    var btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = 'Salvando…';
+    lerArquivo($('#mArq')).then(function (arq) {
+      enfileirar('lancarMensalidade', { chacara: ch, meses: meses, valorPorMes: valor, data: $('#mData').value, pagoPor: $('#lPor').value, arquivo: arq });
+      var total = valor * meses.length, off = navigator.onLine === false;
+      aviso('Mensalidade salva: ' + brl(total) + '.');
+      S.painel = LOCAL.painel(); desenhaLanc(); $('#mCh').value = ch; mostraMeses();
+      $('#lancMsg').innerHTML = caixa('ok', 'Pagamento salvo', 'Chácara ' + ch + ': ' + meses.map(mesCurto).join(', ') + ' · ' + brl(total) +
+        (off ? '\nSem internet agora: ele fica guardado neste aparelho e é enviado sozinho quando a conexão voltar.' : ''));
+      if (!off) sincronizar();
+    }).catch(function (e) { btn.disabled = false; btn.innerHTML = ic('ok') + 'Salvar mensalidade'; falha(e, $('#lancMsg')); });
   }
   function salvarLanc(f) {
     var ent = S.lancTipo === 'entrada', cat = $('#eCat').value;
-    var btn = f.querySelector('button[type=submit]'); btn.disabled = true;
-    chamar('lancar', S.token, {
-      tipo: ent ? 'Entrada' : 'Saída', categoria: cat, campanha: cat === 'Campanha' ? $('#eCamp').value : '',
-      chacara: ent ? $('#eCh').value : '', pagoPor: ent ? $('#lPor').value : '', data: $('#eData').value, descricao: $('#eDesc').value, valor: centavos($('#eValor').value)
-    }).then(function () {
+    var dados = { tipo: ent ? 'Entrada' : 'Saída', categoria: cat, campanha: cat === 'Campanha' ? $('#eCamp').value : '',
+      chacara: ent ? $('#eCh').value : '', pagoPor: ent ? $('#lPor').value : '', data: $('#eData').value, descricao: $('#eDesc').value.trim(), valor: centavos($('#eValor').value) };
+    if (!(dados.valor > 0)) { $('#lancMsg').innerHTML = caixa('atr', 'Confira o valor', 'Informe um valor maior que zero.'); return; }
+    if (!dados.descricao) { $('#lancMsg').innerHTML = caixa('atr', 'Escreva uma descrição', 'Exemplo: Conta de luz do poço.'); return; }
+    var btn = f.querySelector('button[type=submit]'); var rotBtn = btn.innerHTML; btn.disabled = true; btn.innerHTML = 'Salvando…';
+    lerArquivo($('#eArq')).then(function (arq) {
+      dados.arquivo = arq;
+      enfileirar('lancar', dados);
+      var off = navigator.onLine === false;
       aviso(ent ? 'Entrada salva.' : 'Despesa salva.');
-      return carregaPainel().then(function () { desenhaLanc(); $('#lancMsg').innerHTML = caixa('ok', ent ? 'Entrada salva' : 'Despesa salva', 'Você pode lançar outra ou ver em Movimentos.'); });
-    }).catch(function (e) { btn.disabled = false; falha(e, $('#lancMsg')); });
+      S.painel = LOCAL.painel(); desenhaLanc();
+      $('#lancMsg').innerHTML = caixa('ok', ent ? 'Entrada salva' : 'Despesa salva', off ? 'Sem internet agora: fica guardada neste aparelho e é enviada sozinha quando a conexão voltar.' : 'Você pode lançar outra ou ver em Movimentos.');
+      if (!off) sincronizar();
+    }).catch(function (e) { btn.disabled = false; btn.innerHTML = rotBtn; falha(e, $('#lancMsg')); });
   }
 
   // ---------- Movimentos ----------
   VISTAS.movimentos = function (c) {
     if (!S.mesMov) S.mesMov = (S.painel && S.painel.mesAtual) || mesDe(hoje());
-    chamar('listarLancamentos', S.token, S.mesMov).then(function (l) {
+    consultar('listarLancamentos', S.mesMov).then(function (l) { if (S.vista === 'movimentos') desenhaMov(c, l); }).catch(function (e) { falha(e, c); });
+  };
+  function desenhaMov(c, l) {
+    {
       S.movs = l;
       var ativos = l.filter(function (x) { return x.status !== 'Cancelado'; });
       var te = tot(ativos.filter(function (x) { return x.tipo === 'Entrada'; })), ts = tot(ativos.filter(function (x) { return x.tipo === 'Saída'; }));
@@ -1101,19 +1562,31 @@ tfoot td { font-weight: 700; background: var(--papel); }
           var tit = x.categoria === 'Mensalidade' ? 'Chácara ' + x.chacara + ' · ' + mesCurto(x.mes) : x.descricao;
           var sub = (x.categoria === 'Campanha' ? 'Campanha ' + x.campanhaNome : x.categoria) + (x.pagoPor ? ' · pago por ' + x.pagoPor : '') + (x.status === 'Cancelado' ? ' · CANCELADO' : '');
           return '<li class="' + (x.status === 'Cancelado' ? 'cancelado' : '') + '"><button class="linha-btn" type="button" data-acao="verMov" data-i="' + i + '"><span class="ic ' + (ent ? 'ent' : 'sai') + '">' + ic(ent ? 'entra' : 'sai') + '</span>' +
-            '<span class="txt"><strong>' + esc(tit) + '</strong><span>' + dataBR(x.data) + ' · ' + esc(sub) + '</span></span><span class="val ' + (ent ? 'ent' : 'sai') + '">' + (ent ? '+ ' : '− ') + brl(x.valor) + '</span></button></li>';
+            '<span class="txt"><strong>' + esc(tit) + '</strong><span>' + dataBR(x.data) + ' · ' + esc(sub) + (x.comprovante ? ' · com comprovante' : '') + '</span>' +
+            (x.pendente ? '<br><span class="selo ' + (x.status === 'Erro' ? 'inad' : 'pendente-selo') + '" style="margin-top:6px">' + ic(x.status === 'Erro' ? 'alerta' : 'relogio') + (x.status === 'Erro' ? 'Não enviado' : 'Aguardando envio') + '</span>' : '') + '</span><span class="val ' + (ent ? 'ent' : 'sai') + '">' + (ent ? '+ ' : '− ') + brl(x.valor) + '</span></button></li>';
         }).join('') + '</ul>' : vazio('Nenhum lançamento em ' + mesNome(S.mesMov) + '.')) + '</section></div>';
-    }).catch(function (e) { falha(e, c); });
-  };
+    }
+  }
   function verMov(i) {
     var x = S.movs[i];
+    if (x.pendente) {
+      abrirModal(x.descricao || 'Lançamento', caixa(x.status === 'Erro' ? 'inad' : 'info', x.status === 'Erro' ? 'O servidor recusou este lançamento' : 'Aguardando envio',
+        x.status === 'Erro' ? x.motivo : 'Ele foi salvo neste aparelho e será enviado na próxima sincronização com internet.') +
+        '<p style="margin-top:12px">' + dataBR(x.data) + ' · ' + brl(x.valor) + (x.chacara ? ' · chácara ' + esc(x.chacara) : '') + '</p>' +
+        '<div class="btns" style="margin-top:16px">' + (x.status === 'Erro' ? '<button class="btn" type="button" data-acao="filaTentar" data-uid="' + x.pendente + '">' + ic('relogio') + 'Tentar enviar de novo</button>' : '') +
+        '<button class="btn perigo" type="button" data-acao="filaDescartar" data-uid="' + x.pendente + '">' + ic('x') + 'Descartar</button></div>');
+      return;
+    }
     var linhas = [['Data', dataBR(x.data)], ['Tipo', x.tipo], ['Categoria', x.categoria === 'Campanha' ? 'Campanha ' + x.campanhaNome : x.categoria], ['Chácara', x.chacara || '—'],
       ['Mês de referência', x.mes ? mesNome(x.mes) : '—'], ['Pago por', x.pagoPor || '—'], ['Valor', brl(x.valor)], ['Lançado por', x.criadoPor || '—'], ['Código', x.id]];
     if (x.status === 'Cancelado') linhas.push(['Motivo do cancelamento', x.motivo]);
     abrirModal(x.descricao || 'Lançamento', '<div class="tabela"><table><tbody>' + linhas.map(function (l) { return '<tr><th scope="row">' + l[0] + '</th><td>' + esc(l[1]) + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<div style="margin-top:18px" id="compBox">' + (x.comprovante ? '<button class="btn sec largo" type="button" data-acao="verCompAdm" data-id="' + x.id + '">' + ic('olho') + 'Ver comprovante</button>' :
+        '<form id="fAnexo" data-id="' + x.id + '" novalidate>' + campoArquivo('aArq') + '<button class="btn sec largo" type="submit">' + ic('mais') + 'Anexar comprovante</button></form>') + '</div>' +
       (x.status !== 'Cancelado' ? '<div id="cancBox" style="margin-top:18px"><button class="btn perigo largo" type="button" data-acao="pedeCancMov" data-id="' + x.id + '">' + ic('x') + 'Cancelar este lançamento</button></div>' :
         '<div style="margin-top:18px">' + caixa('info', 'Lançamento cancelado', 'Ele continua aparecendo aqui para conferência, mas não conta no caixa.') + '</div>'),
       x.status === 'Cancelado' ? 'Cancelado' : '');
+    ligaArquivos($('#mCorpo'));
   }
   function pedeCancMov(id) {
     $('#cancBox').innerHTML = '<div class="aviso atr">' + ic('alerta') + '<strong>Cancelar este lançamento?</strong><p>Nada é apagado: ele fica marcado como cancelado e sai das contas.</p>' +
@@ -1122,51 +1595,160 @@ tfoot td { font-weight: 700; background: var(--papel); }
     $('#cMot').focus();
   }
   function confCancMov(id) {
-    chamar('cancelarLancamento', S.token, id, $('#cMot').value).then(function () { aviso('Lançamento cancelado.'); fecharModal(); ir('movimentos'); })
+    if (precisaInternet()) return;
+    chamar('cancelarLancamento', S.token, id, $('#cMot').value).then(function () { aviso('Lançamento cancelado.'); fecharModal(); return sincronizar().then(function () { ir('movimentos'); }); })
       .catch(function (e) { $('#cMsg').innerHTML = caixa('inad', 'Não deu certo', e.message); });
   }
 
   // ---------- Associados ----------
   VISTAS.associados = function (c) {
     carregaPainel().then(function (p) {
+      var aba = S.assocAba || 'grade';
       c.innerHTML = '<div class="pilha">' +
-        '<div class="cab-secao"><div class="titulo-pag"><span class="rotulo">Cadastro</span><h1>Associados</h1><p>' + p.associados.length + ' chácaras cadastradas. Toque em uma para ver o histórico.</p></div>' +
+        '<div class="cab-secao"><div class="titulo-pag"><span class="rotulo">Cadastro</span><h1>Associados</h1><p id="asResumo"></p></div>' +
         '<button class="btn" type="button" data-acao="novoAssoc">' + ic('mais') + 'Novo associado</button></div>' +
-        '<div class="busca">' + ic('lupa') + '<label class="sr" for="bAs">Procurar</label><input id="bAs" type="text" placeholder="Procurar por número ou nome" autocomplete="off"></div>' +
-        '<div class="chacaras" id="gradeAs" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))"></div></div>';
-      var desenha = function () {
-        var f = $('#bAs').value.trim().toLowerCase();
-        var l = p.associados.filter(function (a) { return !f || a.chacara.indexOf(f) === 0 || a.nome.toLowerCase().indexOf(f) >= 0; });
-        $('#gradeAs').innerHTML = l.length ? l.map(function (a) {
-          return '<button type="button" class="chacara ' + SIT[a.situacao].c + '" data-acao="verAssoc" data-ch="' + esc(a.chacara) + '"><span class="n"><small>Chácara</small>' + esc(a.chacara) + '</span><strong style="overflow-wrap:anywhere">' + esc(a.nome) + '</strong>' + selo(a.situacao) + '</button>';
-        }).join('') : '<div style="grid-column:1/-1">' + vazio(p.associados.length ? 'Ninguém encontrado.' : 'Nenhum associado cadastrado ainda. Toque em "Novo associado".') + '</div>';
-      };
-      $('#bAs').addEventListener('input', desenha); desenha();
+        '<div class="segmento" role="tablist" aria-label="Forma de ver">' +
+          '<button type="button" role="tab" data-acao="assocAba" data-aba="grade" aria-selected="' + (aba === 'grade') + '">' + ic('grade') + 'Mês a mês</button>' +
+          '<button type="button" role="tab" data-acao="assocAba" data-aba="lista" aria-selected="' + (aba === 'lista') + '">' + ic('lista') + 'Cadastro completo</button></div>' +
+        '<div class="busca">' + ic('lupa') + '<label class="sr" for="bAs">Procurar</label><input id="bAs" type="text" placeholder="Procurar por número, nome ou celular" autocomplete="off" value="' + esc(S.buscaAs || '') + '"></div>' +
+        '<div class="filtros" role="group" aria-label="Filtrar por situação" id="filtrosAs"></div>' +
+        '<div id="listaAs"></div></div>';
+      $('#bAs').addEventListener('input', function (e) { S.buscaAs = e.target.value; desenhaAssoc(); });
+      desenhaAssoc();
     }).catch(function (e) { falha(e, c); });
   };
+  function desenhaAssoc() {
+    var p = S.painel, f = String(S.buscaAs || '').trim().toLowerCase(), fd = soDig(f);
+    var cont = { todos: p.associados.length, 'em dia': 0, atrasado: 0, inadimplente: 0 };
+    p.associados.forEach(function (a) { cont[a.situacao]++; });
+    $('#asResumo').textContent = p.associados.length + ' chácaras cadastradas. Toque em uma linha para ver o histórico completo.';
+    $('#filtrosAs').innerHTML = [['todos', 'Todos'], ['em dia', 'Em dia'], ['atrasado', 'Atrasados'], ['inadimplente', 'Inadimplentes']].map(function (x) {
+      return '<button type="button" data-acao="filtroAs" data-f="' + x[0] + '" aria-pressed="' + (S.filtroAs === x[0]) + '">' + x[1] + ' <span class="peq">(' + cont[x[0]] + ')</span></button>';
+    }).join('');
+    var l = p.associados.filter(function (a) {
+      if (S.filtroAs !== 'todos' && a.situacao !== S.filtroAs) return false;
+      return !f || a.chacara.toLowerCase().indexOf(f) === 0 || a.nome.toLowerCase().indexOf(f) >= 0 || (fd.length >= 3 && soDig(a.celular).indexOf(fd) >= 0);
+    });
+    if (!l.length) { $('#listaAs').innerHTML = '<div class="cartao">' + vazio(p.associados.length ? 'Ninguém encontrado.' : 'Nenhum associado cadastrado ainda. Toque em "Novo associado".') + '</div>'; return; }
+    if ((S.assocAba || 'grade') === 'grade') {
+      $('#asResumo').textContent = p.associados.length + ' chácaras. Toque no número da chácara para editar o cadastro.';
+      $('#listaAs').innerHTML = '<section class="cartao pilha" style="gap:12px">' + gradeAdim(l, { nomes: true, editar: true }) + '</section>'; return;
+    }
+    var aberto = function (a) { return a.abertos.length ? a.abertos.length + (a.abertos.length === 1 ? ' mês' : ' meses') + ' · ' + brl(a.abertos.length * a.mensalidade) : 'Nada'; };
+    var mesesAb = function (a) { return a.abertos.length ? a.abertos.map(mesCurto).join(', ') : '—'; };
+    var zap = function (a) { return a.celular ? '<a class="btn zap peq" href="' + linkZap(a.celular, 'Olá, ' + a.nome.split(' ')[0] + '! Aqui é a diretoria do Recanto da Siriema.') + '" target="_blank" rel="noopener">' + ic('zap') + 'WhatsApp</a>' : ''; };
+    var acoes = function (a) { return '<div class="btns"><button class="btn sec peq" type="button" data-acao="verAssoc" data-ch="' + esc(a.chacara) + '">' + ic('olho') + 'Histórico</button>' +
+      '<button class="btn sec peq" type="button" data-acao="editarAssoc" data-ch="' + esc(a.chacara) + '">' + ic('lapis') + 'Editar</button>' + zap(a) + '</div>'; };
+    var mesesCurtos = function (a) { return a.abertos.map(function (m) { var q = m.split('-'); return MESES_C[Number(q[1]) - 1] + '/' + q[0].slice(2); }).join(', '); };
+    var tabela = '<div class="so-pc"><div class="tabela"><table class="tab-assoc"><thead><tr><th>Chácara</th><th>Nome</th><th>Celular</th><th class="n">Mensal.</th><th>Situação</th><th>Em aberto</th><th>Desde</th><th>Observações</th><th class="seta"><span class="sr">Abrir</span></th></tr></thead><tbody>' +
+      l.map(function (a) {
+        return '<tr class="linha-clicavel" tabindex="0" data-acao="verAssoc" data-ch="' + esc(a.chacara) + '"><td class="ch">' + esc(a.chacara) + '</td><td class="nome"><strong>' + esc(a.nome) + '</strong>' + (textoTerrenos(a) ? '<br><span class="peq suave">' + esc(textoTerrenos(a)) + '</span>' : '') + '</td><td style="white-space:nowrap">' + esc(a.celular || '—') + '</td><td class="n">' + brl(a.mensalidade) + '</td><td>' + selo(a.situacao) + '</td>' +
+          '<td class="ab">' + (a.abertos.length ? '<strong>' + aberto(a) + '</strong><br><span class="peq suave">' + mesesCurtos(a) + '</span>' : '<span class="suave">Nada</span>') + '</td><td style="white-space:nowrap">' + (a.cobrarDesde ? mesCurto(a.cobrarDesde) : '—') + '</td>' +
+          '<td class="peq suave" style="min-width:150px">' + esc(a.obs || '') + '</td><td class="seta">' + ic('dir') + '<span class="sr">Abrir histórico</span></td></tr>';
+      }).join('') + '</tbody></table></div></div>';
+    var lista = '<ul class="lista-assoc so-cel">' + l.map(function (a) {
+      return '<li class="' + SIT[a.situacao].c + '"><div class="topo-l"><span class="ch">Chácara ' + esc(a.chacara) + '</span>' + selo(a.situacao) + '</div>' +
+        '<strong style="font-size:1.1rem">' + esc(a.nome) + '</strong>' +
+        '<dl>' + ((a.terrenos || []).length ? '<dt>Terrenos</dt><dd style="font-weight:400">' + a.terrenos.map(function (t) { return '<strong>' + esc(t.numero) + '</strong> ' + esc(t.situacao === 'Não informado' ? '' : t.situacao.toLowerCase()) + (t.cobrado ? '' : ' · <em>não cobrado: ' + esc(t.motivo) + '</em>'); }).join('<br>') + '</dd>' : '') + '<dt>Celular</dt><dd>' + esc(a.celular || '—') + '</dd><dt>Mensalidade</dt><dd>' + brl(a.mensalidade) + '</dd><dt>Em aberto</dt><dd>' + aberto(a) + '</dd>' +
+        (a.abertos.length ? '<dt>Meses</dt><dd>' + mesesAb(a) + '</dd>' : '') + '<dt>Cobra desde</dt><dd>' + (a.cobrarDesde ? mesCurto(a.cobrarDesde) : '—') + '</dd>' +
+        (a.obs ? '<dt>Obs.</dt><dd style="font-weight:400">' + esc(a.obs) + '</dd>' : '') + '</dl>' + acoes(a) + '</li>';
+    }).join('') + '</ul>';
+    $('#listaAs').innerHTML = tabela + lista;
+  }
 
   function formAssoc(a) {
     a = a || {};
     abrirModal(a.id ? 'Editar chácara ' + a.chacara : 'Novo associado', '<form id="fAssoc" novalidate data-id="' + esc(a.id || '') + '">' +
-      '<div class="dupla"><div class="campo"><label for="aCh">Número da chácara</label><input id="aCh" type="text" inputmode="numeric" value="' + esc(a.chacara || '') + '" placeholder="Ex.: 13 ou 17/18"></div>' +
-      campoValor('aMen', a.mensalidade || S.painel.mensalidadePadrao, 'Mensalidade') + '</div>' +
       '<div class="campo"><label for="aNome">Nome</label><input id="aNome" type="text" value="' + esc(a.nome || '') + '"></div>' +
+      '<fieldset class="terrenos-caixa"><legend>Terrenos desta pessoa</legend>' +
+        '<p class="dica" style="margin:0">Um terreno por linha. Desmarque "Cobra mensalidade" para os terrenos que não pagam e escreva o motivo.</p>' +
+        '<div id="terrenos">' + ((a.terrenos && a.terrenos.length ? a.terrenos : (a.chacara ? String(a.chacara).split('/').map(function (n) { return { numero: n, cobrado: true }; }) : [{ numero: '', cobrado: true }])).map(linhaTerreno).join('')) + '</div>' +
+        '<div class="btns"><button class="btn sec peq" type="button" data-acao="addTerreno">' + ic('mais') + 'Adicionar terreno</button><span class="suave peq" id="terResumo"></span></div>' +
+      '</fieldset>' +
+      campoValor('aMen', a.mensalidade || S.painel.mensalidadePadrao, 'Mensalidade combinada (por mês)') +
+      '<p class="dica" style="margin-top:-10px">Valor que essa pessoa paga por mês, somando os terrenos cobrados.</p>' +
       '<div class="dupla"><div class="campo"><label for="aCel">Celular com DDD</label><input id="aCel" type="tel" inputmode="tel" value="' + esc(a.celular || '') + '" placeholder="(31) 99999-0000"></div>' +
       '<div class="campo"><label for="aDesde">Cobrar a partir de</label><input id="aDesde" type="month" value="' + esc(a.cobrarDesde || S.painel.mesAtual) + '"><span class="dica">Primeiro mês de mensalidade.</span></div></div>' +
       '<div class="campo"><label for="aObs">Observações</label><input id="aObs" type="text" value="' + esc(a.obs || '') + '" placeholder="Ex.: pagamento costuma vir do filho"></div>' +
+      (a.id ? '' : '') +
       '<div id="aMsg" aria-live="polite"></div>' +
-      '<button class="btn largo" type="submit">' + ic('ok') + 'Salvar</button></form>');
+      '<button class="btn largo" type="submit">' + ic('ok') + 'Salvar cadastro</button></form>' + (a.id && a.abertos ? blocoRegularizacao(a) : ''));
+    ligaArquivos($('#mCorpo'));
+    var caixaT = $('#terrenos');
+    caixaT.addEventListener('change', function (e) {
+      if (e.target.matches('[data-t=cobrado]')) { var m = $('.terreno-motivo', e.target.closest('[data-terreno]')); m.hidden = e.target.checked; if (!e.target.checked) $('input', m).focus(); }
+      resumoTerrenos();
+    });
+    caixaT.addEventListener('input', resumoTerrenos);
+    resumoTerrenos();
     ligaValores($('#mCorpo'));
     $('#aCel').addEventListener('input', mascaraCel);
   }
+  function blocoRegularizacao(a) {
+    var fim = ultimoDevido();
+    return '<section class="pilha" style="gap:14px;margin-top:22px"><div><span class="rotulo">Regularizar</span><h3 style="margin-top:4px">Regularizar a contagem desta chácara</h3>' +
+      '<p class="suave" style="margin-top:6px">Hoje: ' + selo(a.situacao) + ' ' + (a.abertos.length ? a.abertos.length + (a.abertos.length === 1 ? ' mês' : ' meses') + ' em aberto (' + a.abertos.map(mesCurto).join(', ') + ')' : 'nada em aberto') + '</p></div>' +
+      (a.regularizacao ? '<div class="reg-hist"><strong>Histórico:</strong>\n' + esc(a.regularizacao) + '</div>' : '') +
+      '<form id="fRegR" class="reg-caixa" novalidate data-id="' + esc(a.id) + '"><div><strong style="font-size:1.08rem">Recomeçar a contar</strong><p class="suave peq" style="margin-top:4px">Para quem ficou um tempo sem pagar por um motivo aceito pela diretoria e vai voltar agora. Os meses anteriores deixam de ser cobrados.</p></div>' +
+        '<div class="dupla"><div class="campo"><label for="rgMes">Contar a partir de</label><input id="rgMes" type="month" value="' + mesAtualL() + '"></div>' +
+        '<div class="campo"><label for="rgMot">Motivo</label><input id="rgMot" type="text" placeholder="Ex.: chácara fechada, sem uso"></div></div>' +
+        '<button class="btn sec" type="submit">' + ic('relogio') + 'Recomeçar a contagem</button></form>' +
+      '<form id="fRegA" class="reg-caixa" novalidate data-id="' + esc(a.id) + '"><div><strong style="font-size:1.08rem">Acordo de pagamento</strong><p class="suave peq" style="margin-top:4px">Para quem renegociou e pagou um valor combinado para quitar os meses atrasados. O valor entra no caixa e os meses até a data escolhida ficam quitados.</p></div>' +
+        '<div class="dupla">' + campoValor('rgVal', 0, 'Valor pago no acordo') + '<div class="campo"><label for="rgAte">Quitou até</label><input id="rgAte" type="month" value="' + fim + '"></div></div>' +
+        '<div class="dupla"><div class="campo"><label for="rgData">Data do pagamento</label><input id="rgData" type="date" value="' + hojeLocal() + '"></div>' +
+        '<div class="campo"><label for="rgPor">Nome de quem pagou</label><input id="rgPor" type="text" placeholder="Se foi o próprio associado, pode deixar em branco"></div></div>' +
+        '<div class="campo"><label for="rgMotA">Observação do acordo</label><input id="rgMotA" type="text" placeholder="Ex.: acordo aprovado na reunião de 10/11"></div>' +
+        campoArquivo('rgArq') +
+        '<button class="btn" type="submit">' + ic('ok') + 'Registrar acordo</button></form><div id="rgMsg" aria-live="polite"></div></section>';
+  }
+  function salvarRegularizacao(f, modo) {
+    if (precisaInternet()) return;
+    var btn = f.querySelector('button[type=submit]'), rot = btn.innerHTML; btn.disabled = true; btn.innerHTML = 'Salvando…';
+    var p = modo === 'acordo' ? lerArquivo($('#rgArq')).then(function (arq) {
+      return chamar('regularizarAssociado', S.token, { id: f.dataset.id, modo: 'acordo', mes: $('#rgAte').value, valor: centavos($('#rgVal').value), data: $('#rgData').value, pagoPor: $('#rgPor').value, motivo: $('#rgMotA').value, arquivo: arq });
+    }) : chamar('regularizarAssociado', S.token, { id: f.dataset.id, modo: 'recomecar', mes: $('#rgMes').value, motivo: $('#rgMot').value });
+    p.then(function () { aviso(modo === 'acordo' ? 'Acordo registrado.' : 'Contagem recomeçada.'); fecharModal(); return carregaPainel(true).then(function () { ir(S.vista); }); })
+      .catch(function (e) { btn.disabled = false; btn.innerHTML = rot; $('#rgMsg').innerHTML = caixa('inad', 'Não foi possível salvar', e.message || String(e)); });
+  }
+  var SIT_TERRENO = ['Com casa', 'Sem construção', 'Em obra', 'Não informado'];
+  function linhaTerreno(t) {
+    t = t || { numero: '', cobrado: true };
+    var uid = 't' + Math.random().toString(36).slice(2, 8), cobra = t.cobrado !== false;
+    return '<div class="terreno-linha" data-terreno>' +
+      '<div class="campo"><label for="' + uid + 'n">Nº do terreno</label><input id="' + uid + 'n" type="text" inputmode="numeric" data-t="numero" value="' + esc(t.numero || '') + '" placeholder="Ex.: 23"></div>' +
+      '<div class="campo"><label for="' + uid + 's">Situação</label><select id="' + uid + 's" data-t="situacao">' + SIT_TERRENO.map(function (x) { return '<option' + ((t.situacao || 'Não informado') === x ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select></div>' +
+      '<label class="opcao terreno-cobra"><input type="checkbox" data-t="cobrado"' + (cobra ? ' checked' : '') + '><span><span class="marca"></span>Cobra mensalidade</span></label>' +
+      '<div class="campo terreno-motivo"' + (cobra ? ' hidden' : '') + '><label for="' + uid + 'm">Motivo de não cobrar</label><input id="' + uid + 'm" type="text" data-t="motivo" value="' + esc(t.motivo || '') + '" placeholder="Ex.: terreno sem casa, combinado com a diretoria"></div>' +
+      '<button class="btn perigo peq terreno-remover" type="button" data-acao="remTerreno" aria-label="Remover este terreno">' + ic('x') + 'Remover</button></div>';
+  }
+  function lerTerrenos() {
+    return $$('[data-terreno]').map(function (l) {
+      return { numero: $('[data-t=numero]', l).value.trim(), situacao: $('[data-t=situacao]', l).value, cobrado: $('[data-t=cobrado]', l).checked, motivo: $('[data-t=motivo]', l).value.trim() };
+    }).filter(function (t) { return t.numero; });
+  }
+  function resumoTerrenos() {
+    var ts = lerTerrenos(), c = ts.filter(function (t) { return t.cobrado; }).length, r = $('#terResumo');
+    if (r) r.textContent = ts.length ? 'Paga por ' + c + ' de ' + ts.length + (ts.length === 1 ? ' terreno' : ' terrenos') + ' · código: ' + ts.map(function (t) { return t.numero; }).sort(function (x, y) { return (parseInt(x, 10) || 0) - (parseInt(y, 10) || 0); }).join('/') : '';
+  }
+  function textoTerrenos(a) {
+    var ts = a.terrenos || [];
+    if (ts.length < 2 && ts.every(function (t) { return t.cobrado; })) return '';
+    var nc = ts.filter(function (t) { return !t.cobrado; });
+    return 'Paga por ' + (ts.length - nc.length) + ' de ' + ts.length + ' terrenos' + (nc.length ? ' · não cobrado: ' + nc.map(function (t) { return t.numero; }).join(', ') : '');
+  }
   function salvarAssoc(f) {
-    chamar('salvarAssociado', S.token, { id: f.dataset.id, chacara: $('#aCh').value, nome: $('#aNome').value, celular: $('#aCel').value, mensalidade: centavos($('#aMen').value), cobrarDesde: $('#aDesde').value, obs: $('#aObs').value })
-      .then(function () { aviso('Cadastro salvo.'); fecharModal(); ir('associados'); })
+    if (precisaInternet()) return;
+    var ts = lerTerrenos();
+    if (!ts.length) { $('#aMsg').innerHTML = caixa('atr', 'Falta o terreno', 'Informe o número de pelo menos um terreno.'); return; }
+    var semMotivo = ts.filter(function (t) { return !t.cobrado && !t.motivo; })[0];
+    if (semMotivo) { $('#aMsg').innerHTML = caixa('atr', 'Falta o motivo', 'Escreva por que o terreno ' + semMotivo.numero + ' não é cobrado.'); return; }
+    chamar('salvarAssociado', S.token, { id: f.dataset.id, terrenos: ts, nome: $('#aNome').value, celular: $('#aCel').value, mensalidade: centavos($('#aMen').value), cobrarDesde: $('#aDesde').value, obs: $('#aObs').value })
+      .then(function () { aviso('Cadastro salvo.'); fecharModal(); return carregaPainel(true).then(function () { ir(S.vista); }); })
       .catch(function (e) { $('#aMsg').innerHTML = caixa('inad', 'Não foi possível salvar', e.message); });
   }
   function verAssoc(ch) {
     abrirModal('Chácara ' + ch, carregando());
-    chamar('historicoChacara', S.token, ch).then(function (h) {
+    consultar('historicoChacara', ch).then(function (h) {
       var a = h.associado;
       if (!a) { $('#mCorpo').innerHTML = vazio('Chácara sem cadastro.'); return; }
       var zapTxt = 'Olá, ' + a.nome.split(' ')[0] + '! Aqui é a diretoria do Recanto da Siriema.';
@@ -1206,23 +1788,25 @@ tfoot td { font-weight: 700; background: var(--papel); }
     x = x || {};
     abrirModal(x.id ? 'Editar campanha' : 'Nova campanha', '<form id="fCamp" novalidate data-id="' + esc(x.id || '') + '">' +
       '<div class="campo"><label for="kNome">Nome da campanha</label><input id="kNome" type="text" value="' + esc(x.nome || '') + '" placeholder="Ex.: Luz Forte"></div>' +
-      '<div class="campo"><label for="kDesc">Para que é o dinheiro?</label><textarea id="kDesc" placeholder="Ex.: Postes, cabeamento e mão de obra para a Cemig ligar a rede">' + esc(x.descricao || '') + '</textarea></div>' +
+      '<div class="campo"><label for="kDesc">Descrição da campanha</label><textarea id="kDesc" placeholder="Explique para que é o dinheiro. Ex.: postes, cabeamento e mão de obra para a Cemig ligar a rede">' + esc(x.descricao || '') + '</textarea><span class="dica">Aparece para todos no portal, junto da barra de progresso.</span></div>' +
       '<div class="dupla">' + campoValor('kMeta', x.meta, 'Meta (quanto precisa juntar)') + '<div class="campo"><label for="kIni">Começou em</label><input id="kIni" type="date" value="' + esc(x.inicio || S.painel.hoje) + '"></div></div>' +
       '<fieldset><legend>Situação</legend><div class="opcoes">' +
         '<label class="opcao"><input type="radio" name="kSt" value="Ativa"' + (x.status !== 'Concluída' ? ' checked' : '') + '><span><span class="marca"></span>Em andamento</span></label>' +
         '<label class="opcao"><input type="radio" name="kSt" value="Concluída"' + (x.status === 'Concluída' ? ' checked' : '') + '><span><span class="marca"></span>Concluída</span></label></div></fieldset>' +
+      '<label class="opcao"><input type="checkbox" id="kOculta"' + (x.oculta ? ' checked' : '') + '><span><span class="marca"></span><span>Ocultar do portal público<small>A campanha some para os associados, mas continua aqui na diretoria e nos relatórios.</small></span></span></label>' +
       '<div id="kMsg" aria-live="polite"></div><button class="btn largo" type="submit">' + ic('ok') + 'Salvar campanha</button></form>');
     ligaValores($('#mCorpo'));
   }
   function salvarCamp(f) {
-    chamar('salvarCampanha', S.token, { id: f.dataset.id, nome: $('#kNome').value, descricao: $('#kDesc').value, meta: centavos($('#kMeta').value), inicio: $('#kIni').value, status: ($('input[name=kSt]:checked') || {}).value })
-      .then(function () { aviso('Campanha salva.'); fecharModal(); ir('campanhas'); })
+    if (precisaInternet()) return;
+    chamar('salvarCampanha', S.token, { id: f.dataset.id, nome: $('#kNome').value, descricao: $('#kDesc').value, meta: centavos($('#kMeta').value), inicio: $('#kIni').value, status: ($('input[name=kSt]:checked') || {}).value, oculta: $('#kOculta').checked })
+      .then(function () { aviso('Campanha salva.'); fecharModal(); return carregaPainel(true).then(function () { ir('campanhas'); }); })
       .catch(function (e) { $('#kMsg').innerHTML = caixa('inad', 'Não foi possível salvar', e.message); });
   }
 
   // ---------- Reservas (diretoria) ----------
   VISTAS.reservas = function (c) {
-    chamar('reservasDiretoria', S.token).then(function (d) {
+    consultar('reservasDiretoria').then(function (d) {
       S.resD = d;
       var abas = [['ativas', 'Marcadas', d.ativas.length], ['avisos', 'Avisos', d.avisos.length], ['fila', 'Fila', d.fila.length], ['encerradas', 'Histórico', null]];
       c.innerHTML = '<div class="pilha" style="max-width:960px">' +
@@ -1274,7 +1858,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
       '<div class="btns"><button class="btn perigo cheio" type="button" data-acao="confCancRes" data-id="' + id + '">Sim, cancelar</button><button class="btn sec" type="button" data-acao="resAba" data-aba="' + S.resAba + '">Voltar</button></div></div></div>';
     $('#mot_' + id).focus();
   }
-  function recarregaRes() { return chamar('reservasDiretoria', S.token).then(function (d) { S.resD = d; ir('reservas'); }); }
+  function recarregaRes() { return sincronizar().then(function () { S.resD = LOCAL.reservasDiretoria(); ir('reservas'); }); }
 
   // ---------- Relatórios ----------
   VISTAS.relatorios = function (c) {
@@ -1301,7 +1885,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
   function desenhaRel() {
     var corpo = $('#relCorpo'); corpo.innerHTML = carregando();
     if (S.relTipo === 'mes') {
-      chamar('relatorioMes', S.token, S.mesRel).then(function (r) {
+      consultar('relatorioMes', S.mesRel).then(function (r) {
         S.relAtual = r;
         corpo.innerHTML = cabImpressao('Prestação de contas de ' + mesNome(r.mes)) +
           '<div class="pilha"><div class="nao-imprimir">' + mesNav('mesRel', r.mes) + '</div>' +
@@ -1323,7 +1907,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
     } else if (S.relTipo === 'camp') {
       var cs = S.painel.campanhas;
       if (!cs.length) { corpo.innerHTML = '<div class="cartao">' + vazio('Nenhuma campanha cadastrada.') + '</div>'; return; }
-      chamar('relatorioCampanha', S.token, S.relCamp).then(function (r) {
+      consultar('relatorioCampanha', S.relCamp).then(function (r) {
         var x = r.campanha;
         corpo.innerHTML = cabImpressao('Relatório da campanha ' + x.nome) +
           '<div class="pilha"><div class="campo nao-imprimir" style="max-width:420px"><label for="relC">Campanha</label><select id="relC">' + cs.map(function (k) { return '<option value="' + k.id + '"' + (k.id === x.id ? ' selected' : '') + '>' + esc(k.nome) + '</option>'; }).join('') + '</select></div>' +
@@ -1337,15 +1921,17 @@ tfoot td { font-weight: 700; background: var(--papel); }
         $('#relC').addEventListener('change', function (e) { S.relCamp = e.target.value; desenhaRel(); });
       }).catch(function (e) { falha(e, corpo); });
     } else {
-      chamar('relatorioAdimplencia', S.token).then(function (r) {
+      consultar('relatorioAdimplencia').then(function (r) {
         var l = r.associados.slice().sort(function (a, b) { return b.abertos.length - a.abertos.length; });
         var t = { emDia: 0, atrasado: 0, inadimplente: 0 };
         l.forEach(function (a) { if (a.situacao === 'em dia') t.emDia++; else if (a.situacao === 'atrasado') t.atrasado++; else t.inadimplente++; });
         var devendo = l.reduce(function (s, a) { return s + a.devendo; }, 0);
         corpo.innerHTML = cabImpressao('Relatório de adimplência') + '<div class="pilha">' + contas(t) +
           '<p class="suave">Vencimento no dia ' + r.regras.vencimento + '. Atrasado com ' + r.regras.atraso + ' meses em aberto; inadimplente com ' + r.regras.inadimplente + ' ou mais. Total em aberto: <strong style="color:var(--tinta)">' + brl(devendo) + '</strong>.</p>' +
+          '<section class="cartao pilha" style="gap:12px">' + gradeAdim(r.associados, { nomes: true, editar: true }) + '</section>' +
+          '<h3 style="margin-top:8px">Quem está devendo</h3>' +
           '<ul class="lista adim cartao" style="padding-block:4px">' +
-          l.map(function (a) {
+          l.filter(function (a) { return a.abertos.length; }).map(function (a) {
             var txt = 'Olá, ' + a.nome.split(' ')[0] + '! Aqui é a diretoria do Recanto da Siriema. Consta em aberto: ' + a.abertos.map(mesCurto).join(', ') + ' (' + brl(a.devendo) + '). Qualquer dúvida, estamos à disposição.';
             return '<li><span class="ch">' + esc(a.chacara) + '</span><span class="txt"><strong>' + esc(a.nome) + '</strong><span>' + (a.abertos.length ? 'Em aberto: ' + a.abertos.map(mesCurto).join(', ') + ' · ' + brl(a.devendo) : 'Nada em aberto') + '</span></span>' +
               '<span class="fim">' + selo(a.situacao) + (a.abertos.length && a.celular ? '<a class="btn zap peq nao-imprimir" href="' + linkZap(a.celular, txt) + '" target="_blank" rel="noopener">' + ic('zap') + 'Lembrar</a>' : '') + '</span></li>';
@@ -1357,7 +1943,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
   // ---------- Configurações ----------
   VISTAS.config = function (c) {
     if (!S.usuario || S.usuario.perfil !== 'admin') { c.innerHTML = caixa('atr', 'Somente o administrador', 'Peça ao administrador da diretoria para mudar as configurações.'); return; }
-    Promise.all([carregaPainel(), chamar('listarUsuarios', S.token)]).then(function (res) {
+    Promise.all([carregaPainel(), consultar('listarUsuarios')]).then(function (res) {
       var cfg = {}; res[0].config.forEach(function (x) { cfg[x.chave] = x.valor; });
       var us = res[1];
       var campo = function (k, rot, dica, tipo) {
@@ -1398,7 +1984,8 @@ tfoot td { font-weight: 700; background: var(--papel); }
     var v = {};
     $$('#fCfg [data-k]').forEach(function (i) { v[i.dataset.k] = i.hasAttribute('data-valor') ? String(centavos(i.value)) : i.value; });
     v.conferirCelular = ($('input[name=cf_conf]:checked') || {}).value || 'sim';
-    chamar('salvarConfig', S.token, v).then(function () { S.info = null; aviso('Configurações salvas.'); $('#cfgMsg').innerHTML = caixa('ok', 'Configurações salvas', 'As mudanças já valem para o portal.'); })
+    if (precisaInternet()) return;
+    chamar('salvarConfig', S.token, v).then(function () { S.info = null; sincronizar(); aviso('Configurações salvas.'); $('#cfgMsg').innerHTML = caixa('ok', 'Configurações salvas', 'As mudanças já valem para o portal.'); })
       .catch(function (e) { $('#cfgMsg').innerHTML = caixa('inad', 'Não foi possível salvar', e.message); });
   }
   function mostraSenhaNova(r, nome) {
@@ -1417,13 +2004,14 @@ tfoot td { font-weight: 700; background: var(--papel); }
     mesPub: function (el) { S.mesPub = somaMes(S.mesPub || S.publico.mes, Number(el.dataset.n)); ir('inicio'); },
     mesCal: function (el) {
       S.mesCal = somaMes(S.mesCal, Number(el.dataset.n));
-      chamar('calendario', S.mesCal).then(function (cal) { S.cal = cal; $('.cal-cab .mesnav strong').textContent = maiusc(mesNome(S.mesCal)); desenhaCal(); }).catch(falha);
+      $('.cal-cab .mesnav strong').textContent = maiusc(mesNome(S.mesCal));
+      S.cal = LOCAL.calendario(S.mesCal); desenhaCal();
     },
     dia: function (el) { S.diaSel = el.dataset.dia; desenhaCal(); desenhaPeriodos(); var p = $('#periodos'); if (p && window.innerWidth < 1024) p.scrollIntoView({ behavior: 'smooth', block: 'center' }); },
     mesMov: function (el) { S.mesMov = somaMes(S.mesMov, Number(el.dataset.n)); ir('movimentos'); },
     mesRel: function (el) { S.mesRel = somaMes(S.mesRel, Number(el.dataset.n)); desenhaRel(); },
     copiarTexto: function (el) { copiar(el.dataset.texto); },
-    sair: function () { chamar('sair', S.token).catch(function () { }); S.token = null; S.usuario = null; S.painel = null; guarda('siriema_token', null); aviso('Você saiu.'); ir('inicio'); },
+    sair: function () { if (navigator.onLine !== false) chamar('sair', S.token).catch(function () { }); S.token = null; S.usuario = null; S.painel = null; guarda('siriema_token', null); DB.dir = null; gravarJSON('siriema_dir2', null); _cacheLanc.fonte = null; aviso('Você saiu.'); ir('inicio'); },
     verPublico: function () { ir('inicio'); },
     menuMais: function () {
       var itens = [['movimentos', 'Movimentos', 'lista'], ['associados', 'Associados', 'pessoas'], ['campanhas', 'Campanhas', 'bandeira']];
@@ -1445,7 +2033,7 @@ tfoot td { font-weight: 700; background: var(--papel); }
     irReservas: function (el) { S.resAba = el.dataset.aba; ir('reservas'); },
     irRel: function (el) { S.relTipo = el.dataset.tipo; if (el.dataset.id) S.relCamp = el.dataset.id; ir('relatorios'); },
     resAba: function (el) { S.resAba = el.dataset.aba; $$('.segmento [data-acao=resAba]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.aba === S.resAba); }); desenhaResAba(); },
-    taxaPaga: function (el) { el.disabled = true; chamar('marcarTaxaPaga', S.token, el.dataset.id).then(function () { aviso('Taxa recebida. A entrada já foi lançada no caixa.'); recarregaRes(); }).catch(function (e) { el.disabled = false; falha(e); }); },
+    taxaPaga: function (el) { el.disabled = true; S.pubCache = {}; chamar('marcarTaxaPaga', S.token, el.dataset.id).then(function () { aviso('Taxa recebida. A entrada já foi lançada no caixa.'); recarregaRes(); }).catch(function (e) { el.disabled = false; falha(e); }); },
     pedeCancRes: function (el) { pedeCancRes(el.dataset.id); },
     confCancRes: function (el) {
       el.disabled = true;
@@ -1473,8 +2061,30 @@ tfoot td { font-weight: 700; background: var(--papel); }
         '<div id="uMsg" aria-live="polite"></div><button class="btn largo" type="submit">' + ic('ok') + 'Criar acesso</button></form>');
     },
     novaSenha: function (el) { chamar('novaSenhaUsuario', S.token, el.dataset.id).then(function (r) { mostraSenhaNova(r); }).catch(falha); },
-    ativarUsuario: function (el) { chamar('ativarUsuario', S.token, el.dataset.id, el.dataset.ativo === '1').then(function () { aviso('Pronto.'); ir('config'); }).catch(falha); },
-    trocarMinhaSenha: function () { abrirTrocaSenha(false); }
+    ativarUsuario: function (el) { if (precisaInternet()) return; chamar('ativarUsuario', S.token, el.dataset.id, el.dataset.ativo === '1').then(function () { aviso('Pronto.'); return sincronizar().then(function () { ir('config'); }); }).catch(falha); },
+    trocarMinhaSenha: function () { abrirTrocaSenha(false); },
+    addMes: function () { incluirMes(); },
+    verCompPub: function (el) {
+      abrirModal('Comprovante da despesa', carregando('Abrindo o comprovante…'));
+      chamar('comprovantePublico', el.dataset.id).then(function (a) { mostraComprovante(a, 'Comprovante da despesa'); }).catch(function (e) { falha(e, $('#mCorpo')); });
+    },
+    verCompAdm: function (el) {
+      abrirModal('Comprovante', carregando('Abrindo o comprovante…'));
+      chamar('verComprovante', S.token, el.dataset.id).then(function (a) { mostraComprovante(a); }).catch(function (e) { falha(e, $('#mCorpo')); });
+    },
+    filtroAs: function (el) { S.filtroAs = el.dataset.f; desenhaAssoc(); },
+    sincronizar: function () { if (navigator.onLine === false) { aviso('Sem internet. Conecte-se para sincronizar.', 'erro'); atualizaBarra(); return; } sincronizar(true).catch(falha); },
+    gradeNav: function (el) {
+      var n = Number(el.dataset.n), novo = somaMes(S.gradeFim || mesAtualL(), n);
+      S.gradeFim = novo > mesAtualL() ? mesAtualL() : novo;
+      if (S.vista === 'relatorios') desenhaRel(); else if (S.vista === 'associados') desenhaAssoc(); else desenhaChacaras();
+    },
+    editarCh: function (el) { var a = assocPorCh(el.dataset.ch); if (a) formAssoc(a); },
+    addTerreno: function () { $('#terrenos').insertAdjacentHTML('beforeend', linhaTerreno()); var ls = $$('[data-terreno]'); $('[data-t=numero]', ls[ls.length - 1]).focus(); resumoTerrenos(); },
+    remTerreno: function (el) { if ($$('[data-terreno]').length <= 1) { aviso('A pessoa precisa ter pelo menos um terreno.', 'erro'); return; } el.closest('[data-terreno]').remove(); resumoTerrenos(); },
+    assocAba: function (el) { S.assocAba = el.dataset.aba; $$('.segmento [data-acao=assocAba]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.aba === S.assocAba); }); desenhaAssoc(); },
+    filaTentar: function (el) { fecharModal(); tentarFila(el.dataset.uid).then(function () { ir(S.vista); }).catch(falha); },
+    filaDescartar: function (el) { descartarFila(el.dataset.uid); fecharModal(); aviso('Lançamento descartado.'); ir(S.vista); }
   };
 
   document.addEventListener('click', function (ev) {
@@ -1488,26 +2098,32 @@ tfoot td { font-weight: 700; background: var(--papel); }
   });
   document.addEventListener('submit', function (ev) {
     var f = ev.target; ev.preventDefault();
-    var mapa = { fRes: enviarReserva, fLogin: entrar, fSenha: salvarSenha, fMens: salvarMens, fLanc: salvarLanc, fAssoc: salvarAssoc, fCamp: salvarCamp, fCfg: salvarCfg,
+    var mapa = { fRegR: function (form) { salvarRegularizacao(form, 'recomecar'); }, fRegA: function (form) { salvarRegularizacao(form, 'acordo'); }, fAnexo: function (form) {
+        var btn = form.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = 'Enviando…';
+        lerArquivo($('#aArq')).then(function (arq) {
+          if (!arq) throw new Error('Escolha a foto ou o PDF do comprovante.');
+          return chamar('anexarComprovante', S.token, form.dataset.id, arq);
+        }).then(function () { aviso('Comprovante anexado.'); fecharModal(); return sincronizar().then(function () { ir('movimentos'); }); })
+          .catch(function (e) { btn.disabled = false; btn.innerHTML = ic('mais') + 'Anexar comprovante'; aviso(e.message || String(e), 'erro'); });
+      },
+      fRes: enviarReserva, fLogin: entrar, fSenha: salvarSenha, fMens: salvarMens, fLanc: salvarLanc, fAssoc: salvarAssoc, fCamp: salvarCamp, fCfg: salvarCfg,
       fUsu: function () {
         chamar('criarUsuario', S.token, { nome: $('#uNome').value, usuario: $('#uUsu').value, perfil: ($('input[name=uPer]:checked') || {}).value })
-          .then(function (r) { mostraSenhaNova(r); }).catch(function (e) { $('#uMsg').innerHTML = caixa('inad', 'Não foi possível criar', e.message); });
+          .then(function (r) { mostraSenhaNova(r); sincronizar(); }).catch(function (e) { $('#uMsg').innerHTML = caixa('inad', 'Não foi possível criar', e.message); });
       } };
     if (mapa[f.id]) mapa[f.id](f);
   });
 
   // ---------- Início ----------
   S.token = le('siriema_token');
+  if (S.token) { DB.dir = lerJSON('siriema_dir2'); if (DB.dir) S.usuario = DB.dir.usuario; }
   var ultima = le('siriema_vista');
-  if (S.token) {
-    chamar('quemSou', S.token).then(function (u) {
-      S.usuario = u;
-      if (u.trocarSenha) { abrirTrocaSenha(true); return; }
-      ir(ultima && NAV_ADM.some(function (n) { return n[0] === ultima; }) ? ultima : 'painel');
-    }).catch(function () { S.token = null; guarda('siriema_token', null); ir('inicio'); });
-  } else {
-    ir(ultima && NAV_PUB.some(function (n) { return n[0] === ultima; }) && ultima !== 'entrar' ? ultima : 'inicio');
-  }
+  atualizaBarra();
+  if (S.token) ir(ultima && NAV_ADM.some(function (n) { return n[0] === ultima; }) ? ultima : 'painel');
+  else ir(ultima && NAV_PUB.some(function (n) { return n[0] === ultima; }) && ultima !== 'entrar' ? ultima : 'inicio');
+  // Já mostra o que está guardado e busca a versão nova em segundo plano.
+  if (temDados() && (!S.token || DB.dir)) sincronizar().catch(function (e) { if (String(e && e.message).indexOf('SESSAO_') === 0) falha(e); });
+  if (!DENTRO_DO_GOOGLE && 'serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(function () { }); } catch (e) { } }
 })();
 </script>
 </body>
