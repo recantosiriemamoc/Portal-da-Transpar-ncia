@@ -149,6 +149,15 @@ main.conteudo {
 .titulo-pag p { color: var(--suave); max-width: 60ch; }
 
 /* Destaque do saldo */
+/* Faixa de números no topo do portal: só quantidades, nunca quais chácaras */
+.contagem { list-style: none; margin: 0 0 18px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.contagem li { background: var(--cartao); border: 1px solid var(--linha); border-radius: var(--raio-p); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; border-top: 5px solid var(--linha-forte); }
+.contagem .num { font-family: var(--f-num); font-weight: 800; font-size: 1.9rem; line-height: 1.1; font-variant-numeric: lining-nums tabular-nums; }
+.contagem .rot { font-size: .95rem; font-weight: 600; color: var(--suave); line-height: 1.25; }
+.contagem .k-ok { border-top-color: var(--ok); } .contagem .k-ok .num { color: var(--ok); }
+.contagem .k-atr { border-top-color: #d99a1f; } .contagem .k-atr .num { color: var(--atr); }
+.contagem .k-inad { border-top-color: var(--inad); } .contagem .k-inad .num { color: var(--inad); }
+@media (min-width: 720px) { .contagem { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .heroi {
   position: relative; overflow: hidden; border-radius: 26px; padding: 26px 24px 24px; color: #fff;
   background: radial-gradient(120% 140% at 100% 0%, var(--mata-3) 0%, var(--mata) 55%);
@@ -696,16 +705,19 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       var ls = ativos().filter(function (l) { return l.data.slice(0, 7) === ym; });
       var camps = campanhasTot(false), nomes = {}; camps.forEach(function (c) { nomes[c.id] = c.nome; });
       var linha = function (l) { return { id: l.id, comprovante: l.tipo === 'Saída' && l.comprovante, data: l.data, tipo: l.tipo, categoria: l.categoria,
-        campanha: nomes[l.campanha] || '', chacara: l.chacara, mes: l.mes, descricao: l.categoria === 'Mensalidade' ? '' : l.descricao, valor: l.valor, pendente: l.pendente }; };
+        campanha: nomes[l.campanha] || '', chacara: '', mes: '', descricao: l.categoria === 'Mensalidade' ? '' : l.descricao, valor: l.valor, pendente: l.pendente }; };
       var porData = function (a, b) { return a.data.localeCompare(b.data); };
-      var adim = adimplencia(false);
-      var t = { emDia: 0, atrasado: 0, inadimplente: 0 };
-      adim.forEach(function (a) { if (a.situacao === 'em dia') t.emDia++; else if (a.situacao === 'atrasado') t.atrasado++; else t.inadimplente++; });
       var ent = ls.filter(function (l) { return l.tipo === 'Entrada'; }), sai = ls.filter(function (l) { return l.tipo === 'Saída'; });
-      return { nome: d.config.nomeAssociacao, mes: ym, mesAtual: mesAtualL(), saldoAtual: saldoAte(), entradasMes: r2(tot(ent)), saidasMes: r2(tot(sai)),
+      // Só números. O portal público recebe a contagem pronta; a diretoria calcula com os próprios dados.
+      var contagem = d.contagem;
+      if (!contagem) {
+        var ad = adimplencia(false), mA = mesAtualL();
+        contagem = { total: ad.length, pagaramMes: ad.filter(function (x) { return x.pagos && x.pagos[mA]; }).length,
+          atrasados: ad.filter(function (x) { return x.situacao === 'atrasado'; }).length, inadimplentes: ad.filter(function (x) { return x.situacao === 'inadimplente'; }).length };
+      }
+      return { contagem: contagem, nome: d.config.nomeAssociacao, mes: ym, mesAtual: mesAtualL(), saldoAtual: saldoAte(), entradasMes: r2(tot(ent)), saidasMes: r2(tot(sai)),
         entradas: ent.sort(porData).map(linha), saidas: sai.sort(porData).map(linha), campanhas: camps.filter(function (c) { return !c.oculta; }),
-        chacaras: adim.map(function (a) { return { chacara: a.chacara, situacao: a.situacao, abertos: a.abertos.length }; }), totais: t,
-        regras: { atraso: d.config.mesesAtraso, inadimplente: d.config.mesesInadimplente }, atualizadoEm: DB.sinc || d.geradoEm };
+        atualizadoEm: DB.sinc || d.geradoEm };
     },
     infoReserva: function () {
       var d = D();
@@ -808,7 +820,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
   }
   // Telas só de leitura são redesenhadas com os dados novos; formulários não são interrompidos.
   function redesenhaSePuder() {
-    var leitura = ['inicio', 'chacaras', 'painel', 'movimentos', 'associados', 'campanhas', 'reservas', 'relatorios'];
+    var leitura = ['inicio', 'painel', 'movimentos', 'associados', 'campanhas', 'reservas', 'relatorios'];
     if (leitura.indexOf(S.vista) < 0 || $('#modalRaiz').innerHTML) return;
     var y = window.scrollY, abertos = $$('details.grupo[open]').map(function (dd) { return dd.dataset.k; });
     try { VISTAS[S.vista]($('#conteudo')); } catch (e) { }
@@ -1007,7 +1019,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
 
   // ---------- Navegação ----------
   var NAV_PUB = [
-    ['inicio', 'Início', 'casa'], ['chacaras', 'Chácaras', 'grade'], ['reservar', 'Reservar', 'cal'], ['entrar', 'Diretoria', 'chave']
+    ['inicio', 'Início', 'casa'], ['reservar', 'Reservar', 'cal'], ['entrar', 'Diretoria', 'chave']
   ];
   var NAV_ADM = [
     ['painel', 'Painel', 'casa'], ['lancar', 'Lançar', 'mais'], ['movimentos', 'Movimentos', 'lista'], ['associados', 'Associados', 'pessoas'],
@@ -1049,6 +1061,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
 
   var VISTAS = {};
   function ir(v) {
+    if (v === 'chacaras') v = 'inicio';
     if (v === 'entrar' && S.token) { S.modo = 'adm'; v = 'painel'; }
     if (NAV_ADM.some(function (n) { return n[0] === v; })) { if (!S.token) v = 'entrar'; else S.modo = 'adm'; }
     else S.modo = 'publico';
@@ -1082,14 +1095,14 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       '<div class="numeros"><div><span class="l">Arrecadado</span><span class="v">' + brl(c.arrecadado) + '</span></div>' +
       '<div><span class="l">Gasto</span><span class="v">' + brl(c.gasto) + '</span></div>' +
       '<div><span class="l">Saldo</span><span class="v">' + brl(c.arrecadado - c.gasto) + '</span></div></div>' +
-      (c.contribuintes ? '<p class="peq suave">' + c.contribuintes + ' chácara' + (c.contribuintes > 1 ? 's' : '') + ' contribuíram</p>' : '') +
       '</article>';
   }
 
   function linhaPub(l) {
     var ent = l.tipo === 'Entrada';
-    var titulo = l.categoria === 'Mensalidade' ? 'Chácara ' + l.chacara : (l.descricao || l.categoria);
-    var sub = l.categoria === 'Mensalidade' ? 'Mensalidade de ' + mesCurto(l.mes) : (l.campanha ? 'Campanha ' + l.campanha : l.categoria) + (l.chacara && l.categoria !== 'Mensalidade' ? ' · chácara ' + l.chacara : '');
+    // Portal público: pagamentos nunca aparecem ligados a uma chácara
+    var titulo = l.categoria === 'Mensalidade' ? 'Mensalidade' : (l.descricao || l.categoria);
+    var sub = l.campanha ? 'Campanha ' + l.campanha : l.categoria;
     return '<li><span class="ic ' + (ent ? 'ent' : 'sai') + '">' + ic(ent ? 'entra' : 'sai') + '</span><span class="txt"><strong>' + esc(titulo) + '</strong><span>' + dataBR(l.data) + ' · ' + esc(sub) + '</span>' +
       (l.comprovante ? '<br><button class="btn-comp" type="button" data-acao="verCompPub" data-id="' + esc(l.id) + '">' + ic('olho') + 'Ver comprovante</button>' : '') + '</span>' +
       '<span class="val ' + (ent ? 'ent' : 'sai') + '">' + (ent ? '+ ' : '− ') + brl(l.valor) + '</span></li>';
@@ -1115,7 +1128,12 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       S.publico = r; if (!S.mesPub) S.mesPub = r.mes;
       var ativas = r.campanhas.filter(function (x) { return x.status !== 'Concluída'; });
       var concl = r.campanhas.filter(function (x) { return x.status === 'Concluída'; });
-      c.innerHTML = '<div class="pilha">' +
+      var k = r.contagem || { total: 0, pagaramMes: 0, atrasados: 0, inadimplentes: 0 };
+      var itemK = function (n, rot, cls) { return '<li class="' + cls + '"><span class="num">' + n + '</span><span class="rot">' + rot + '</span></li>'; };
+      c.innerHTML = '<ul class="contagem" aria-label="Quantidade de chácaras por situação">' +
+        itemK(k.total, 'Chacreiros no total', 'k-total') + itemK(k.pagaramMes, 'Pagaram este mês', 'k-ok') +
+        itemK(k.atrasados, 'Atrasados', 'k-atr') + itemK(k.inadimplentes, 'Inadimplentes', 'k-inad') + '</ul>' +
+        '<div class="pilha">' +
         '<section class="heroi" aria-labelledby="hSaldo"><div class="ave marca-dagua" aria-hidden="true"></div>' +
         '<span class="rotulo" id="hSaldo">Saldo em caixa hoje</span><div class="saldo">' + brl(r.saldoAtual) + '</div>' +
         '<p class="quando">Dados sincronizados ' + quandoSinc() + '</p>' +
@@ -1128,14 +1146,12 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
             '<section class="cartao" aria-labelledby="hSai"><div class="cab-secao"><div><span class="rotulo">Para onde foi o dinheiro</span><h2 id="hSai">Despesas de ' + mesNome(r.mes) + '</h2></div></div>' +
             '<div style="margin-top:10px">' + grupos(r.saidas, 'Saída') + '</div></section>' +
             '<section class="cartao" aria-labelledby="hEnt"><div class="cab-secao"><div><span class="rotulo">O que entrou</span><h2 id="hEnt">Entradas de ' + mesNome(r.mes) + '</h2></div></div>' +
-            '<p class="suave peq" style="margin-top:6px">Toque em um grupo para ver os pagamentos. Aparece só o número da chácara.</p>' +
+            '<p class="suave peq" style="margin-top:6px">Toque em um grupo para ver cada entrada.</p>' +
             '<div style="margin-top:6px">' + grupos(r.entradas, 'Entrada') + '</div></section>' +
           '</div>' +
           '<div class="pilha">' +
             '<section class="pilha" aria-labelledby="hCamp" style="gap:14px"><div><span class="rotulo">Campanhas</span><h2 id="hCamp">Arrecadações com meta</h2></div>' +
             (ativas.concat(concl).map(campanhaHTML).join('') || '<div class="cartao">' + vazio('Nenhuma campanha ainda.') + '</div>') + '</section>' +
-            '<section class="cartao" aria-labelledby="hSit"><span class="rotulo">Mensalidades</span><h2 id="hSit" style="margin-bottom:14px">Situação das chácaras</h2>' + contas(r.totais, true) +
-            '<button class="btn sec largo" type="button" data-ir="chacaras" style="margin-top:16px">' + ic('grade') + 'Ver todas as chácaras</button></section>' +
           '</div>' +
         '</div>' +
         '<p class="rodape-pag">Associação Rural Recanto da Siriema · transparência das contas para todos os associados</p>' +
@@ -1151,25 +1167,6 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       '<div class="conta ok"><span class="n">' + t.emDia + '</span><span class="t">' + ic('ok') + 'Em dia</span></div>' +
       '<div class="conta atr"><span class="n">' + t.atrasado + '</span><span class="t">' + ic('relogio') + 'Atrasadas</span></div>' +
       '<div class="conta inad"><span class="n">' + t.inadimplente + '</span><span class="t">' + ic('x') + 'Inadimplentes</span></div></div>';
-  }
-
-  VISTAS.chacaras = function (c) {
-    consultar('resumoPublico', mesAtualLocal()).then(function (r) {
-      S.publico = r;
-      c.innerHTML = '<div class="pilha">' +
-        '<div class="titulo-pag"><span class="rotulo">Mensalidades</span><h1>Situação das chácaras</h1>' +
-        '<p>Mostramos só o número da chácara. Com ' + r.regras.atraso + ' ou ' + (r.regras.inadimplente - 1) + ' meses em aberto, a chácara fica <strong>atrasada</strong>. Com ' + r.regras.inadimplente + ' meses ou mais, fica <strong>inadimplente</strong> e não pode votar nem reservar a área de lazer.</p></div>' +
-        contas(r.totais) +
-        '<div class="busca">' + ic('lupa') + '<label class="sr" for="buscaCh">Procurar chácara</label><input id="buscaCh" inputmode="numeric" placeholder="Digite o número da sua chácara" value="' + esc(S.filtroCh) + '" autocomplete="off"></div>' +
-        '<section class="cartao pilha" style="gap:12px" id="gradeCh"></section></div>';
-      desenhaChacaras();
-      $('#buscaCh').addEventListener('input', function (e) { S.filtroCh = e.target.value; desenhaChacaras(); });
-    }).catch(function (e) { falha(e, c); });
-  };
-  function filtraCh(l, f) { f = String(f || '').trim().toLowerCase(); return l.filter(function (x) { return !f || String(x.chacara).split('/').some(function (p) { return p.indexOf(f) === 0; }) || (x.nome && x.nome.toLowerCase().indexOf(f) >= 0); }); }
-  function desenhaChacaras() {
-    var l = filtraCh(adimplencia(false), S.filtroCh);
-    $('#gradeCh').innerHTML = l.length ? gradeAdim(l, {}) : vazio('Nenhuma chácara com esse número.');
   }
 
   // ---------- Reserva ----------
@@ -2101,7 +2098,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
     gradeNav: function (el) {
       var n = Number(el.dataset.n), novo = somaMes(S.gradeFim || mesAtualL(), n);
       S.gradeFim = novo > mesAtualL() ? mesAtualL() : novo;
-      if (S.vista === 'relatorios') desenhaRel(); else if (S.vista === 'associados') desenhaAssoc(); else desenhaChacaras();
+      if (S.vista === 'relatorios') desenhaRel(); else if (S.vista === 'associados') desenhaAssoc();
     },
     editarCh: function (el) { var a = assocPorCh(el.dataset.ch); if (a) formAssoc(a); },
     addTerreno: function () { $('#terrenos').insertAdjacentHTML('beforeend', linhaTerreno()); var ls = $$('[data-terreno]'); $('[data-t=numero]', ls[ls.length - 1]).focus(); resumoTerrenos(); },
