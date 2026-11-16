@@ -150,19 +150,31 @@ main.conteudo {
 
 /* Destaque do saldo */
 /* Faixa de números no topo do portal: só quantidades, nunca quais chácaras */
-.contagem { list-style: none; margin: 0 0 18px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.contagem li { background: var(--cartao); border: 1px solid var(--linha); border-radius: var(--raio-p); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; border-top: 5px solid var(--linha-forte); }
-.contagem .num { font-family: var(--f-num); font-weight: 800; font-size: 1.9rem; line-height: 1.1; font-variant-numeric: lining-nums tabular-nums; }
-.contagem .rot { font-size: .95rem; font-weight: 600; color: var(--suave); line-height: 1.25; }
-.contagem .k-ok { border-top-color: var(--ok); } .contagem .k-ok .num { color: var(--ok); }
-.contagem .k-atr { border-top-color: #d99a1f; } .contagem .k-atr .num { color: var(--atr); }
-.contagem .k-inad { border-top-color: var(--inad); } .contagem .k-inad .num { color: var(--inad); }
-@media (min-width: 720px) { .contagem { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .heroi {
   position: relative; overflow: hidden; border-radius: 26px; padding: 26px 24px 24px; color: #fff;
   background: radial-gradient(120% 140% at 100% 0%, var(--mata-3) 0%, var(--mata) 55%);
   box-shadow: 0 14px 34px rgba(0, 57, 18, .25);
 }
+.heroi { display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
+.heroi > * { min-width: 0; position: relative; }
+.heroi .linha-saldo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: 16px; row-gap: 8px; margin: 6px 0 4px; }
+.heroi .linha-saldo .saldo { margin: 0; font-size: clamp(2.1rem, 7.5vw, 2.5rem); white-space: nowrap; }
+.heroi .linha-saldo .mesnav { padding: 4px; }
+.heroi .linha-saldo .mesnav { gap: 4px; }
+.heroi .linha-saldo .mesnav button { width: 34px; height: 34px; }
+.heroi .linha-saldo .mesnav strong { min-width: 0; padding: 0 8px; font-size: .92rem; white-space: nowrap; }
+.heroi .sai-seta { color: #ff9a8b; }
+.heroi .quem { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); border-radius: 20px; padding: 16px 18px; align-self: start; }
+.heroi .quem h2 { margin: 0 0 8px; font-family: var(--f-texto); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--oliva); font-weight: 700; }
+.heroi .quem ul { list-style: none; margin: 0; padding: 0; }
+.heroi .quem li { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid rgba(255,255,255,.12); }
+.heroi .quem li:first-child { border-top: 0; }
+.heroi .quem .p { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+.heroi .quem .num { font-family: var(--f-num); font-weight: 800; font-size: 1.7rem; line-height: 1; min-width: 2.2ch; text-align: right; font-variant-numeric: lining-nums tabular-nums; }
+.heroi .quem .rot { font-size: 1rem; font-weight: 600; line-height: 1.2; flex: 1; }
+.heroi .k-total .p { background: #d6dccb; } .heroi .k-ok .p { background: #5fd88a; } .heroi .k-falta .p { background: #9ad0ff; }
+.heroi .k-atr .p { background: #f2b84b; } .heroi .k-inad .p { background: #ff8a7a; }
+@media (min-width: 760px) { .heroi.com-quem { grid-template-columns: minmax(0, 1fr) 300px; padding: 28px; } }
 .heroi .ave.marca-dagua { position: absolute; right: -18px; bottom: -14px; width: 190px; height: 250px; opacity: .17; pointer-events: none; }
 .heroi .rotulo { color: var(--oliva); }
 .heroi .saldo { font-family: var(--f-num); font-weight: 800; letter-spacing: -.015em; font-size: clamp(2.4rem, 9vw, 3.6rem); line-height: 1.05; margin: 6px 0 4px; font-variant-numeric: lining-nums tabular-nums; }
@@ -713,6 +725,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       if (!contagem) {
         var ad = adimplencia(false), mA = mesAtualL();
         contagem = { total: ad.length, pagaramMes: ad.filter(function (x) { return x.pagos && x.pagos[mA]; }).length,
+          emDiaFalta: ad.filter(function (x) { return x.situacao === 'em dia' && !(x.pagos && x.pagos[mA]); }).length,
           atrasados: ad.filter(function (x) { return x.situacao === 'atrasado'; }).length, inadimplentes: ad.filter(function (x) { return x.situacao === 'inadimplente'; }).length };
       }
       return { contagem: contagem, nome: d.config.nomeAssociacao, mes: ym, mesAtual: mesAtualL(), saldoAtual: saldoAte(), entradasMes: r2(tot(ent)), saidasMes: r2(tot(sai)),
@@ -1128,18 +1141,19 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       S.publico = r; if (!S.mesPub) S.mesPub = r.mes;
       var ativas = r.campanhas.filter(function (x) { return x.status !== 'Concluída'; });
       var concl = r.campanhas.filter(function (x) { return x.status === 'Concluída'; });
-      var k = r.contagem || { total: 0, pagaramMes: 0, atrasados: 0, inadimplentes: 0 };
-      var itemK = function (n, rot, cls) { return '<li class="' + cls + '"><span class="num">' + n + '</span><span class="rot">' + rot + '</span></li>'; };
-      c.innerHTML = '<ul class="contagem" aria-label="Quantidade de chácaras por situação">' +
-        itemK(k.total, 'Chacreiros no total', 'k-total') + itemK(k.pagaramMes, 'Pagaram este mês', 'k-ok') +
-        itemK(k.atrasados, 'Atrasados', 'k-atr') + itemK(k.inadimplentes, 'Inadimplentes', 'k-inad') + '</ul>' +
-        '<div class="pilha">' +
-        '<section class="heroi" aria-labelledby="hSaldo"><div class="ave marca-dagua" aria-hidden="true"></div>' +
-        '<span class="rotulo" id="hSaldo">Saldo em caixa hoje</span><div class="saldo">' + brl(r.saldoAtual) + '</div>' +
+      var k = r.contagem || { total: 0, pagaramMes: 0, emDiaFalta: 0, atrasados: 0, inadimplentes: 0 };
+      var d2 = function (n) { n = Number(n) || 0; return (n < 10 ? '0' : '') + n; };
+      var itemK = function (n, rot, cls) { return '<li class="' + cls + '"><span class="p" aria-hidden="true"></span><span class="num">' + d2(n) + '</span><span class="rot">' + rot + '</span></li>'; };
+      c.innerHTML = '<div class="pilha">' +
+        '<section class="heroi com-quem" aria-labelledby="hSaldo"><div class="ave marca-dagua" aria-hidden="true"></div>' +
+        '<div><span class="rotulo" id="hSaldo">Saldo em caixa hoje</span>' +
+        '<div class="linha-saldo"><div class="saldo">' + brl(r.saldoAtual) + '</div>' + mesNav('mesPub', r.mes, r.mesAtual) + '</div>' +
         '<p class="quando">Dados sincronizados ' + quandoSinc() + '</p>' +
-        '<div style="margin-top:18px;position:relative">' + mesNav('mesPub', r.mes, r.mesAtual) + '</div>' +
         '<div class="mini"><div><span class="l">' + ic('entra') + 'Entrou</span><span class="v">' + brl(r.entradasMes) + '</span></div>' +
-        '<div><span class="l">' + ic('sai') + 'Saiu</span><span class="v">' + brl(r.saidasMes) + '</span></div></div></section>' +
+        '<div><span class="l"><span class="sai-seta">' + ic('sai') + '</span>Saiu</span><span class="v">' + brl(r.saidasMes) + '</span></div></div></div>' +
+        '<div class="quem"><h2>Chacreiros hoje</h2><ul aria-label="Quantidade de chácaras por situação">' +
+        itemK(k.total, 'no total', 'k-total') + itemK(k.pagaramMes, 'pagaram este mês', 'k-ok') + itemK(k.emDiaFalta, 'em dia, falta o mês atual', 'k-falta') +
+        itemK(k.atrasados, 'atrasados', 'k-atr') + itemK(k.inadimplentes, 'inadimplentes', 'k-inad') + '</ul></div></section>' +
 
         '<div class="grade lado">' +
           '<div class="pilha">' +
