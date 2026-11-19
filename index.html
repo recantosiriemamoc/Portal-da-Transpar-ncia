@@ -449,8 +449,10 @@ input[type=file]::file-selector-button { font: inherit; font-weight: 700; border
 .tab-assoc td.ab { min-width: 150px; }
 .tab-assoc .seta { color: var(--suave); width: 28px; padding-left: 0; }
 .tab-assoc td.ch { font-family: var(--f-num); font-weight: 800; font-size: 1.25rem; white-space: nowrap; }
-.tab-assoc tr.linha-clicavel { cursor: pointer; }
-.tab-assoc tr.linha-clicavel:hover td { background: var(--papel); }
+.tab-assoc tr.linha-clicavel, .tab-lanc tr.linha-clicavel { cursor: pointer; }
+.tab-assoc tr.linha-clicavel:hover td, .tab-lanc tr.linha-clicavel:hover td { background: var(--papel); }
+.tab-lanc tr.cancelado { opacity: .6; }
+.tab-lanc tr.cancelado td.n { text-decoration: line-through; }
 .lista-assoc { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .lista-assoc li { background: var(--cartao); border: 1px solid var(--linha); border-radius: 18px; padding: 16px; display: grid; gap: 10px; }
 .lista-assoc li.inad { border-left: 6px solid var(--inad); }
@@ -923,7 +925,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
     }).join('') + '<th>Situação</th></tr>';
     var linhas = lista.map(function (a) {
       var chCel = opc.editar ? '<button type="button" class="ch-btn" data-acao="editarCh" data-ch="' + esc(a.chacara) + '" aria-label="Editar cadastro da chácara ' + esc(a.chacara) + '">' + esc(a.chacara) + ic('lapis') + '</button>' : esc(a.chacara);
-      return '<tr><th class="fixa" scope="row">' + chCel + '</th>' + (opc.nomes ? '<td class="nome-col">' + esc(a.nome) + (textoTerrenos(a) ? '<small class="ter-info">' + esc(textoTerrenos(a)) + '</small>' : '') + '</td>' : '') +
+      return '<tr><th class="fixa" scope="row">' + chCel + '</th>' + (opc.nomes ? '<td class="nome-col">' + (opc.editar ? '<button type="button" class="ch-btn" data-acao="verAssoc" data-ch="' + esc(a.chacara) + '" aria-label="Ver lançamentos de ' + esc(a.nome) + '">' + esc(a.nome) + '</button>' : esc(a.nome)) + (textoTerrenos(a) ? '<small class="ter-info">' + esc(textoTerrenos(a)) + '</small>' : '') + '</td>' : '') +
         meses.map(function (m) {
           var e = estadoMes(a, m, fim);
           // Mês pago: botão que abre o registro do pagamento
@@ -1476,7 +1478,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       $('#mValor').addEventListener('input', totalMens);
     } else {
       var ent = t === 'entrada';
-      var cats = ent ? ['Campanha', 'Rendimento', 'Taxa de reserva', 'Doação', 'Outras entradas'] : ['Energia (Cemig)', 'Poço e água', 'Piscina', 'Manutenção', 'Limpeza', 'Eventos e assembleias', 'Campanha', 'Outras despesas'];
+      var cats = ent ? CATS_ENT : CATS_SAI;
       var ativas = p.campanhas.filter(function (x) { return x.status !== 'Concluída'; });
       corpo.innerHTML = '<form id="fLanc" novalidate>' +
         '<div class="dupla"><div class="campo"><label for="eCat">' + (ent ? 'Tipo de entrada' : 'Tipo de despesa') + '</label><select id="eCat">' + cats.map(function (x) { return '<option>' + x + '</option>'; }).join('') + '</select></div>' +
@@ -1590,6 +1592,45 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
     }
   }
   function verMov(i) { verLanc(S.movs[i]); }
+  var CATS_ENT = ['Campanha', 'Rendimento', 'Taxa de reserva', 'Doação', 'Serviço', 'Outras entradas'];
+  var CATS_SAI = ['Energia (Cemig)', 'Poço e água', 'Piscina', 'Manutenção', 'Limpeza', 'Eventos e assembleias', 'Campanha', 'Outras despesas'];
+  // Correção de um lançamento (ex.: mensalidade que na verdade foi pagamento de serviço). volta = chácara cujo histórico reabre depois.
+  function formEditarLanc(x, volta) {
+    var ent = x.tipo === 'Entrada', cats = (ent ? ['Mensalidade'].concat(CATS_ENT) : CATS_SAI).slice();
+    if (cats.indexOf(x.categoria) < 0) cats.push(x.categoria);
+    var chs = S.painel.associados.map(function (a) { return a.chacara; });
+    if (x.chacara && chs.indexOf(x.chacara) < 0) chs.push(x.chacara);
+    abrirModal('Corrigir lançamento', '<form id="fEditLanc" novalidate data-id="' + esc(x.id) + '" data-volta="' + esc(volta || '') + '">' +
+      '<div class="campo"><label for="xCat">Tipo de ' + (ent ? 'entrada' : 'despesa') + '</label><select id="xCat">' + cats.map(function (c) { return '<option' + (c === x.categoria ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select>' +
+        (ent ? '<span class="dica">Para transformar uma mensalidade em pagamento de serviço, escolha "Serviço" e escreva a descrição.</span>' : '') + '</div>' +
+      '<div class="campo" id="xCampBox"><label for="xCamp">Campanha</label><select id="xCamp">' + S.painel.campanhas.map(function (c) { return '<option value="' + esc(c.id) + '"' + (c.id === x.campanha ? ' selected' : '') + '>' + esc(c.nome) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="campo" id="xMesBox"><label for="xMes">Referente ao mês</label><input id="xMes" type="month" value="' + esc(x.mes || '') + '"></div>' +
+      '<div class="campo" id="xDescBox"><label for="xDesc">Descrição</label><input id="xDesc" type="text" value="' + esc(x.categoria === 'Mensalidade' ? '' : x.descricao) + '" placeholder="Ex.: Aluguel do salão"></div>' +
+      '<div class="dupla">' + campoValor('xValor', x.valor) + '<div class="campo"><label for="xData">Data</label><input id="xData" type="date" value="' + esc(String(x.data).slice(0, 10)) + '"></div></div>' +
+      (ent ? '<div class="dupla"><div class="campo"><label for="xCh">Chácara</label><select id="xCh"><option value="">Nenhuma chácara</option>' + chs.map(function (c) { return '<option' + (c === x.chacara ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select></div>' +
+        '<div class="campo"><label for="xPor">Nome de quem pagou</label><input id="xPor" type="text" value="' + esc(x.pagoPor || '') + '"></div></div>' : '') +
+      '<div class="campo"><label for="xMot">Motivo da correção</label><input id="xMot" type="text" placeholder="Ex.: Era pagamento de serviço, não mensalidade"></div>' +
+      '<div id="xMsg" aria-live="polite"></div><button class="btn largo" type="submit">' + ic('ok') + 'Salvar correção</button></form>');
+    ligaValores($('#mCorpo'));
+    var atual = function () {
+      var c = $('#xCat').value;
+      $('#xCampBox').hidden = c !== 'Campanha'; $('#xMesBox').hidden = c !== 'Mensalidade'; $('#xDescBox').hidden = c === 'Mensalidade';
+    };
+    $('#xCat').addEventListener('change', atual); atual();
+  }
+  function salvarEditLanc(f) {
+    if (precisaInternet()) return;
+    var cat = $('#xCat').value, ent = !!$('#xCh'), msg = $('#xMsg');
+    var d = { categoria: cat, campanha: cat === 'Campanha' ? $('#xCamp').value : '', mes: cat === 'Mensalidade' ? $('#xMes').value : '', descricao: cat === 'Mensalidade' ? '' : $('#xDesc').value.trim(),
+      valor: centavos($('#xValor').value), data: $('#xData').value, chacara: ent ? $('#xCh').value : '', pagoPor: ent ? $('#xPor').value : '', motivo: $('#xMot').value.trim() };
+    var erro = !(d.valor > 0) ? 'Informe um valor maior que zero.' : !d.data ? 'Informe a data.' : cat === 'Mensalidade' && !/^\d{4}-\d{2}$/.test(d.mes) ? 'Escolha o mês da mensalidade.' :
+      cat === 'Mensalidade' && !d.chacara ? 'Escolha a chácara da mensalidade.' : cat !== 'Mensalidade' && !d.descricao ? 'Escreva uma descrição.' : !d.motivo ? 'Escreva o motivo da correção.' : '';
+    if (erro) { msg.innerHTML = caixa('atr', 'Confira os dados', erro); return; }
+    var btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = 'Salvando…';
+    chamar('editarLancamento', S.token, f.dataset.id, d).then(function () { aviso('Lançamento corrigido.'); return sincronizar().catch(function () { }); })
+      .then(function () { fecharModal(); ir(S.vista); if (f.dataset.volta) verAssoc(f.dataset.volta); })
+      .catch(function (e) { btn.disabled = false; btn.innerHTML = ic('ok') + 'Salvar correção'; msg.innerHTML = caixa('inad', 'Não foi possível salvar', e.message || String(e)); });
+  }
   // Registro do pagamento de um mês (toque no quadradinho verde da tabela de mensalidades)
   function verPagto(ch, mes, adm) {
     var a = adimplencia(true).filter(function (x) { return x.chacara === ch; })[0], l = a && a.pagos[mes];
@@ -1602,7 +1643,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
       '<div class="tabela" style="margin-top:14px"><table><tbody>' + linhas.map(function (r) { return '<tr><th scope="row">' + r[0] + '</th><td>' + esc(r[1]) + '</td></tr>'; }).join('') + '</tbody></table></div>',
       'Chácara ' + ch);
   }
-  function verLanc(x) {
+  function verLanc(x, volta) {
     if (x.pendente) {
       abrirModal(x.descricao || 'Lançamento', caixa(x.status === 'Erro' ? 'inad' : 'info', x.status === 'Erro' ? 'O servidor recusou este lançamento' : 'Aguardando envio',
         x.status === 'Erro' ? x.motivo : 'Ele foi salvo neste aparelho e será enviado na próxima sincronização com internet.') +
@@ -1617,7 +1658,8 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
     abrirModal(x.descricao || 'Lançamento', '<div class="tabela"><table><tbody>' + linhas.map(function (l) { return '<tr><th scope="row">' + l[0] + '</th><td>' + esc(l[1]) + '</td></tr>'; }).join('') + '</tbody></table></div>' +
       '<div style="margin-top:18px" id="compBox">' + (x.comprovante ? '<button class="btn sec largo" type="button" data-acao="verCompAdm" data-id="' + x.id + '">' + ic('olho') + 'Ver comprovante</button>' :
         '<form id="fAnexo" data-id="' + x.id + '" novalidate>' + campoArquivo('aArq') + '<button class="btn sec largo" type="submit">' + ic('mais') + 'Anexar comprovante</button></form>') + '</div>' +
-      (x.status !== 'Cancelado' ? '<div id="cancBox" style="margin-top:18px"><button class="btn perigo largo" type="button" data-acao="pedeCancMov" data-id="' + x.id + '">' + ic('x') + 'Cancelar este lançamento</button></div>' :
+      (x.status !== 'Cancelado' ? '<div style="margin-top:18px"><button class="btn largo" type="button" data-acao="editarLanc" data-id="' + esc(x.id) + '" data-volta="' + esc(volta || '') + '">' + ic('lapis') + 'Corrigir este lançamento</button></div>' +
+        '<div id="cancBox" style="margin-top:12px"><button class="btn perigo largo" type="button" data-acao="pedeCancMov" data-id="' + x.id + '">' + ic('x') + 'Cancelar este lançamento</button></div>' :
         '<div style="margin-top:18px">' + caixa('info', 'Lançamento cancelado', 'Ele continua aparecendo aqui para conferência, mas não conta no caixa.') + '</div>'),
       x.status === 'Cancelado' ? 'Cancelado' : '');
     ligaArquivos($('#mCorpo'));
@@ -1665,7 +1707,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
     });
     if (!l.length) { $('#listaAs').innerHTML = '<div class="cartao">' + vazio(p.associados.length ? 'Ninguém encontrado.' : 'Nenhum associado cadastrado ainda. Toque em "Novo associado".') + '</div>'; return; }
     if ((S.assocAba || 'grade') === 'grade') {
-      $('#asResumo').textContent = p.associados.length + ' chácaras. Toque no número da chácara para editar o cadastro.';
+      $('#asResumo').textContent = p.associados.length + ' chácaras. Toque no nome para ver e corrigir os lançamentos, ou no número para editar o cadastro.';
       $('#listaAs').innerHTML = '<section class="cartao pilha" style="gap:12px">' + gradeAdim(l, { nomes: true, editar: true }) + '</section>'; return;
     }
     var aberto = function (a) { return a.abertos.length ? a.abertos.length + (a.abertos.length === 1 ? ' mês' : ' meses') + ' · ' + brl(a.abertos.length * a.mensalidade) : 'Nada'; };
@@ -1784,6 +1826,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
     abrirModal('Chácara ' + ch, carregando());
     consultar('historicoChacara', ch).then(function (h) {
       var a = h.associado;
+      S.histMov = h.movimentos;
       if (!a) { $('#mCorpo').innerHTML = vazio('Chácara sem cadastro.'); return; }
       var zapTxt = 'Olá, ' + a.nome.split(' ')[0] + '! Aqui é a diretoria do Recanto da Siriema.';
       $('#mCorpo').innerHTML = '<div class="pilha" style="gap:18px">' +
@@ -1796,10 +1839,12 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
         (h.meses.length ? '<div class="meses">' + h.meses.map(function (m) {
           return '<div class="mes ' + (m.pago ? 'pago' : 'aberto') + '">' + mesCurto(m.mes) + '<small>' + (m.pago ? 'Pago ' + dataCurta(m.data) : 'Em aberto') + '</small></div>';
         }).join('') + '</div>' : '<p class="suave">Nenhuma mensalidade vencida ainda.</p>') + '</section>' +
-        '<section><h3 style="margin-bottom:6px">Pagamentos e lançamentos</h3>' + (h.movimentos.length ? '<ul class="lista">' + h.movimentos.slice(0, 30).map(function (x) {
-          var ent = x.tipo === 'Entrada';
-          return '<li class="' + (x.status === 'Cancelado' ? 'cancelado' : '') + '"><span class="ic ' + (ent ? 'ent' : 'sai') + '">' + ic(ent ? 'entra' : 'sai') + '</span><span class="txt"><strong>' + esc(x.descricao) + '</strong><span>' + dataBR(x.data) + (x.pagoPor ? ' · pago por ' + esc(x.pagoPor) : '') + '</span></span><span class="val ' + (ent ? 'ent' : 'sai') + '">' + brl(x.valor) + '</span></li>';
-        }).join('') + '</ul>' : '<p class="suave">Sem lançamentos.</p>') + '</section>' +
+        '<section><h3 style="margin-bottom:6px">Pagamentos e lançamentos</h3>' + (h.movimentos.length ? '<p class="suave peq" style="margin-bottom:8px">Toque em um lançamento para corrigir ou cancelar.</p><div class="tabela"><table class="tab-lanc"><thead><tr><th>Lançamento</th><th>Data</th><th class="n">Valor</th><th>Referente a</th></tr></thead><tbody>' + h.movimentos.map(function (x, i) {
+          var canc = x.status === 'Cancelado';
+          return '<tr class="linha-clicavel' + (canc ? ' cancelado' : '') + '" tabindex="0" data-acao="verMovAs" data-i="' + i + '" data-ch="' + esc(ch) + '"><td><strong>' + esc(x.categoria === 'Mensalidade' ? 'Mensalidade' : (x.descricao || x.categoria)) + '</strong>' +
+            '<br><span class="peq suave">' + esc(x.categoria === 'Campanha' ? 'Campanha ' + x.campanhaNome : x.categoria) + (x.pagoPor ? ' · pago por ' + esc(x.pagoPor) : '') + (canc ? ' · CANCELADO' : '') + (x.pendente ? ' · aguardando envio' : '') + '</span></td>' +
+            '<td style="white-space:nowrap">' + dataBR(x.data) + '</td><td class="n" style="white-space:nowrap">' + (x.tipo === 'Saída' ? '− ' : '') + brl(x.valor) + '</td><td style="white-space:nowrap">' + (x.mes ? mesCurto(x.mes) : '—') + '</td></tr>';
+        }).join('') + '</tbody></table></div>' : '<p class="suave">Sem lançamentos.</p>') + '</section>' +
         (h.reservas.length ? '<section><h3 style="margin-bottom:6px">Reservas da área de lazer</h3><ul class="lista">' + h.reservas.slice(0, 10).map(function (r) {
           return '<li><span class="ic neu">' + ic('cal') + '</span><span class="txt"><strong>' + dataBR(r.dia) + ' · ' + esc(r.periodo) + '</strong><span>' + esc(r.status) + '</span></span></li>';
         }).join('') + '</ul></section>' : '') + '</div>';
@@ -2057,6 +2102,12 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
     lancTipo: function (el) { S.lancTipo = el.dataset.tipo; $$('.segmento [data-acao=lancTipo]').forEach(function (b) { b.setAttribute('aria-selected', b === el); }); desenhaLanc(); },
     lancarPara: function (el) { var ch = el.dataset.ch; S.lancTipo = 'mensalidade'; fecharModal(); ir('lancar'); var t = setInterval(function () { var s = $('#mCh'); if (s) { clearInterval(t); s.value = ch; mostraMeses(); } }, 80); setTimeout(function () { clearInterval(t); }, 8000); },
     verMov: function (el) { verMov(Number(el.dataset.i)); },
+    verMovAs: function (el) { verLanc(S.histMov[Number(el.dataset.i)], el.dataset.ch); },
+    editarLanc: function (el) {
+      var x = lancamentos().filter(function (l) { return l.id === el.dataset.id; })[0];
+      if (!x) { aviso('Não encontrei o lançamento. Toque em Sincronizar e tente de novo.', 'erro'); return; }
+      carregaPainel().then(function () { formEditarLanc(x, el.dataset.volta); }).catch(falha);
+    },
     verPagto: function (el) { verPagto(el.dataset.ch, el.dataset.mes, el.dataset.adm === '1'); },
     pedeCancMov: function (el) { pedeCancMov(el.dataset.id); },
     confCancMov: function (el) { confCancMov(el.dataset.id); },
@@ -2141,7 +2192,7 @@ button.q:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
         }).then(function () { aviso('Comprovante anexado.'); fecharModal(); return sincronizar().then(function () { ir('movimentos'); }); })
           .catch(function (e) { btn.disabled = false; btn.innerHTML = ic('mais') + 'Anexar comprovante'; aviso(e.message || String(e), 'erro'); });
       },
-      fRes: enviarReserva, fLogin: entrar, fSenha: salvarSenha, fMens: salvarMens, fLanc: salvarLanc, fAssoc: salvarAssoc, fCamp: salvarCamp, fCfg: salvarCfg,
+      fRes: enviarReserva, fLogin: entrar, fSenha: salvarSenha, fMens: salvarMens, fLanc: salvarLanc, fAssoc: salvarAssoc, fEditLanc: salvarEditLanc, fCamp: salvarCamp, fCfg: salvarCfg,
       fUsu: function () {
         chamar('criarUsuario', S.token, { nome: $('#uNome').value, usuario: $('#uUsu').value, perfil: ($('input[name=uPer]:checked') || {}).value })
           .then(function (r) { mostraSenhaNova(r); sincronizar(); }).catch(function (e) { $('#uMsg').innerHTML = caixa('inad', 'Não foi possível criar', e.message); });
